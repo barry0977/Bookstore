@@ -18,12 +18,19 @@ std::vector<std::string> readtoken()//把读入的语句以空格为分隔符切
     while (iss >> substring) {
         token.push_back(substring);
     }
+    return token;
 }
 
 std::vector<std::string> readkey(std::string input)//把读入的语句以|为分隔符切片
 {
     std::vector<std::string> subStrings;
-    while(std::getline)
+    std::stringstream ss(input);
+    std::string token;
+    while(std::getline(ss,token,'|'))
+    {
+        subStrings.push_back(token);
+    }
+    return subStrings;
 }
 
 std::string integerToString(int n)

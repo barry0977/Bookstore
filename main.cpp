@@ -13,6 +13,7 @@ int main()
 {
     try
     {
+        Bookinf bookinf;
         while (true)
         {
             std::vector<std::string> token = readtoken();

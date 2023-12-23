@@ -172,8 +172,14 @@ private:
     MemoryRiver<firstblock,block> memoryriver;
 
 public:
+    blockchain()=default;
 
     blockchain(string filename)
+    {
+        memoryriver.initialise(filename);
+    }
+
+    void initial(string filename)
     {
         memoryriver.initialise(filename);
     }
