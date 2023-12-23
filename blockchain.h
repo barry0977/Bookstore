@@ -113,7 +113,6 @@ public:
 template<int len, class VALUE>//len表示index字符数组的长度，VALUE表示值
 class blockchain
 {
-
 private:
     struct element
     {
@@ -122,13 +121,9 @@ private:
 
         bool operator<(const element& other) const
         {
-            if (strcmp(index,other.index)<0)
+            if (strcmp(index,other.index)!=0)
             {
-                return true;
-            }
-            else if(strcmp(index,other.index)>0)
-            {
-                return false;
+                return strcmp(index,other.index)<0;
             }
             else
             {
@@ -465,7 +460,80 @@ public:
         }
     }
 
-    std::vector<VALUE> findval()
+    std::vector<VALUE> findval(char obj[])
+    {
+        std::vector<VALUE>list;
+        blockinf<firstblock> tmp;
+        memoryriver.get_info(tmp);
+        if(tmp.block1.number>0)
+        {
+            int min = 0, max = tmp.block1.number - 1, place = -1;//找到最后一个小于目标的块,从这个块开始可能有目标
+            while (min <= max)
+            {
+                int mid = (min + max) / 2;
+                if (strcmp(tmp.block1.mininf[mid].index, obj) < 0)
+                {
+                    place = mid;
+                    min = mid + 1;
+                }
+                else
+                {
+                    max = mid - 1;
+                }
+            }
+            if (place < 0)//所有块都大于等于目标
+            {
+                if (strcmp(tmp.block1.mininf[0].index, obj) <= 0)
+                {
+                    for (int i = 0; i < tmp.block1.number; i++)
+                    {
+                        block btmp;
+                        bool isbreak=false;
+                        memoryriver.read(btmp, tmp.block1.minindex[i]);
+                        for (int j = 0; j < btmp.booknum; j++)
+                        {
+                            if(strcmp(btmp.blocklist[j].index,obj)!=0)
+                            {
+                                isbreak=true;
+                                break;
+                            }
+                            list.push_back(btmp.blocklist[j].value);
+                        }
+                        if(isbreak)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                bool isbreak=false;
+                for (int i = place; i < tmp.block1.number; i++)
+                {
+                    block btmp;
+                    memoryriver.read(btmp, tmp.block1.minindex[i]);
+                    for (int j = 0; j < btmp.booknum; j++)
+                    {
+                        if (strcmp(btmp.blocklist[j].index, obj) == 0)
+                        {
+                            list.push_back(btmp.blocklist[j].value);
+                        }
+                        if (strcmp(btmp.blocklist[j].index, obj) > 0)
+                        {
+                            isbreak=true;
+                            break;
+                        }
+                    }
+                    if(isbreak)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        return list;
+    }
 
     void Delete(char name[],VALUE number)
     {
@@ -567,6 +635,12 @@ struct mystr//用于将字符数组封装成结构体
     bool operator==(const mystr& other)const
     {
         return strcmp(value,other.value)==0;
+    }
+
+    mystr<len> operator=(const mystr& a)
+    {
+        strcpy(value,a);
+        return *this;
     }
 };
 
