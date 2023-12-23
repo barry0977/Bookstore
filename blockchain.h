@@ -93,7 +93,7 @@ public:
     }
 
     //用t的值更新位置索引index对应的对象，保证调用的index都是由write函数产生
-    void update(T& t, const int index) {
+    void update(T& t, const int index){
         file.open(file_name);
         file.seekg(index);
         file.write(reinterpret_cast<char*>(&t), sizeofT);
@@ -109,10 +109,9 @@ public:
     }
 };
 
-//template<class T1, class T2,class T3>//T1代表块，T2代表块中结构体,T3代表第一个块
+//template<class INDEX,class VALUE>
 class blockchain
 {
-
 private:
     struct element
     {
