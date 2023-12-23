@@ -7,14 +7,16 @@
 
 #include <string>
 #include <exception>
-class ErrorException : public std::exception {
+class Error{
 public:
-    explicit ErrorException();
-
-    std::string getMessage() const;
+    Error(){};
 
 private:
     std::string message;
 };
 
+void error()
+{
+    std::cout<<"Invalid\n";
+}
 #endif //CODE_ERROR_H

@@ -7,18 +7,24 @@
 #include "blockchain.h"
 struct Book
 {
-    char ISBN[20];
-    char BookName[60];
-    char Author[60];
-    char Keyword[60];
-    float price;//单价
-    int count;//库存数量
+    char ISBN[25]{};
+    char BookName[65]{};
+    char Author[65]{};
+    char Keyword[65]{};
+    double price=0;//单价
+    int count=0;//库存数量
 };
 
 
 class bookinf
 {
 private:
-    blockchain Books;
+    blockchain<25, Book>booklist;//按照ISBN号排序，对应的键值是图书的所有信息
+    blockchain<65,mystr<25>>booknamelist;//按照书名排序
+    blockchain<65,mystr<25>>authorlist;//按照作者排序
+    blockchain<65,mystr<25>>keywordlist;//按照关键字排序
+public:
+    void insert()
 };
+
 #endif //BOOKSTORE_BOOK_H

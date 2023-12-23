@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <vector>
 
 const int Max_size=350;//每个块中储存元素数量的最大值
 
@@ -93,7 +94,7 @@ public:
     }
 
     //用t的值更新位置索引index对应的对象，保证调用的index都是由write函数产生
-    void update(T& t, const int index){
+    void update(T& t, const int index) {
         file.open(file_name);
         file.seekg(index);
         file.write(reinterpret_cast<char*>(&t), sizeofT);
@@ -109,14 +110,15 @@ public:
     }
 };
 
-//template<class INDEX,class VALUE>
+template<int len, class VALUE>//len表示index字符数组的长度，VALUE表示值
 class blockchain
 {
+
 private:
     struct element
     {
-        char index[66]{0};//不能用string，否则会出现free(),invalid point
-        int value=0;
+        char index[len]{0};//不能用string，否则会出现free(),invalid point
+        VALUE value;
 
         bool operator<(const element& other) const
         {
@@ -148,7 +150,7 @@ private:
 
         element()=default;
 
-        element(char ind[],int num)
+        element(char ind[],VALUE num)
         {
             strcpy(index,ind);
             value=num;
@@ -268,7 +270,7 @@ public:
         memoryriver.write_info(tmp);
     }
 
-    void Insert(char name[],int number)
+    void Insert(char name[],VALUE number)
     {
         element obj(name,number);
         blockinf<firstblock> tmp;
@@ -463,7 +465,9 @@ public:
         }
     }
 
-    void Delete(char name[],int number)
+    std::vector<VALUE> findval()
+
+    void Delete(char name[],VALUE number)
     {
         element obj(name,number);
         blockinf<firstblock> tmp;
@@ -534,4 +538,37 @@ public:
         }
     }
 };
+
+template<int len>
+struct mystr//用于将字符数组封装成结构体
+{
+    char value[len]{0};
+
+    mystr(char a[])
+    {
+        strcpy(value,a);
+    }
+
+    mystr(string a)
+    {
+        strcpy(value,a.c_str());
+    }
+
+    bool operator<(const mystr& other)const
+    {
+        return strcmp(value,other.value)<0;
+    }
+
+    bool operator>(const mystr& other)const
+    {
+        return strcmp(value,other.value)>0;
+    }
+
+    bool operator==(const mystr& other)const
+    {
+        return strcmp(value,other.value)==0;
+    }
+};
+
+
 #endif //BOOKSTORE_BLOCKCHAIN_H
