@@ -5,15 +5,18 @@
 #ifndef BOOKSTORE_USER_H
 #define BOOKSTORE_USER_H
 #include "blockchain.h"
+#include "error.h"
 class Visitor
 {
+protected:
+    int privilege=0;
 public:
     void create(char name[],char password[])
     {
 
     }
 
-    void logon(string name,string password)
+    void logon(char name,string password)
     {
 
     }
@@ -21,7 +24,8 @@ public:
 
 class Customer:public Visitor
 {
-    friend class Visitor;
+protected:
+    privilege=1;
 public:
     void revise(std::string oldpassword,string newpassword)
     {
@@ -40,15 +44,33 @@ class Boss:public Staff
 {
 public:
 
+
 };
 
-struct user
+struct User
 {
-    char UserID[35];
-    char Password[35];
-    char Username[35];
-    int Privilege;
+    char UserID[35]{};
+    char Password[35]{};
+    char Username[35]{};
+    int Privilege=0;
+
+    bool operator<(const User& other)const
+    {
+        return strcmp(UserID,other.UserID)<0;
+    }
 };
 
+class userinf
+{
+private:
+    blockchain<35,User>userlist;
+public:
+    void insert(User& obj)
+    {
+        userlist.Insert(obj.UserID,obj);
+    }
+
+    void revise()
+};
 
 #endif //BOOKSTORE_USER_H

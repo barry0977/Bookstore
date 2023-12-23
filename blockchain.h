@@ -605,42 +605,70 @@ public:
             }
         }
     }
+
+    void display()
+    {
+        blockinf<firstblock> tmp;
+        memoryriver.get_info(tmp);
+        for(int i =0;i<tmp.block1.number;i++)
+        {
+            block btmp;
+            memoryriver.read(btmp,tmp.block1.minindex[i]);
+            for(int j=0;j<btmp.booknum;j++)
+            {
+                std::cout<<btmp.blocklist[j].value;
+            }
+        }
+    }
 };
 
 template<int len>
 struct mystr//用于将字符数组封装成结构体
 {
-    char value[len]{0};
+    char value[len]{};
 
-    mystr(char a[])
+    explicit mystr()
+    {
+        memset(value,0,len);
+    }
+
+    explicit mystr(char a[])
     {
         strcpy(value,a);
     }
 
-    mystr(string a)
+    explicit mystr(string& a)
     {
         strcpy(value,a.c_str());
     }
 
-    bool operator<(const mystr& other)const
+    friend bool operator<(const mystr& a,const mystr& b)
     {
-        return strcmp(value,other.value)<0;
+        return strcmp(a.value,b.value)<0;
     }
 
-    bool operator>(const mystr& other)const
+    friend bool operator>(const mystr& a,const mystr& b)
     {
-        return strcmp(value,other.value)>0;
+        return strcmp(a.value,b.value)>0;
     }
 
-    bool operator==(const mystr& other)const
+    friend bool operator==(const mystr& a,const mystr& b)
     {
-        return strcmp(value,other.value)==0;
+        return strcmp(a.value,b.value)==0;
     }
 
-    mystr<len> operator=(const mystr& a)
+    mystr<len> &operator=(const mystr& a)
     {
-        strcpy(value,a);
+        if(this==&a) return *this;
+        memset(value,0,sizeof(value));
+        std::strcpy(value,a.value);
         return *this;
+    }
+
+    std::ostream & operator<<(std::ostream os)
+    {
+        os<<value;
+        return os;
     }
 };
 

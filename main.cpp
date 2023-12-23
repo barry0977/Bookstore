@@ -72,14 +72,11 @@ int main()
             {
 
             }
-            else if (token[0] == "show" && token[1] == "finance") {
-
-            }
             else if (token[0] == "log")
             {
 
             }
-            else if (token[0] == "repoort")
+            else if (token[0] == "report")
             {
 
             }
@@ -93,4 +90,5 @@ int main()
     {
         error();
     }
+    return 0;
 }

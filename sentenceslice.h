@@ -8,7 +8,7 @@
 #include <iostream>
 #include<sstream>
 #include<vector>
-std::vector<std::string> readtoken()//把读入的语句切片
+std::vector<std::string> readtoken()//把读入的语句以空格为分隔符切片
 {
     std::string input;
     std::getline(std::cin,input);//把一整行读入
@@ -18,6 +18,12 @@ std::vector<std::string> readtoken()//把读入的语句切片
     while (iss >> substring) {
         token.push_back(substring);
     }
+}
+
+std::vector<std::string> readkey(std::string input)//把读入的语句以|为分隔符切片
+{
+    std::vector<std::string> subStrings;
+    while(std::getline)
 }
 
 std::string integerToString(int n)

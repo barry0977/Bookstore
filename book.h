@@ -4,19 +4,27 @@
 
 #ifndef BOOKSTORE_BOOK_H
 #define BOOKSTORE_BOOK_H
+#include <iomanip>
 #include "blockchain.h"
+#include "error.h"
 struct Book
 {
     char ISBN[25]{};
     char BookName[65]{};
     char Author[65]{};
     char Keyword[65]{};
-    double price=0;//单价
-    int count=0;//库存数量
+    double Price=0;//单价
+    long long Count=0;//库存数量
 
-    bool operator<(const Book& other)const
+    friend bool operator<(const Book& a,const Book& b)
     {
-        return strcmp(ISBN,other.ISBN);
+        return strcmp(a.ISBN,b.ISBN)<0;
+    }
+
+    friend std::ostream &operator<<(std::ostream &os,const Book& obj)
+    {
+        os<<obj.ISBN<<'\t'<<obj.BookName<<'\t'<<obj.Author<<'\t'<<obj.Keyword<<'\t'<<std::fixed<<std::setprecision(2)<<obj.Price<<'\t'<<obj.Count<<'\n';
+        return os;
     }
 };
 
@@ -38,7 +46,54 @@ public:
         keywordlist.Insert(obj.Keyword,isbn);
     }
 
-    void modify()
+    void show()
+    {
+        booklist.display();
+    }
+
+    void show(string &s)
+    {
+        std::vector<Book>list;
+        switch(s[1])
+        {
+            case 'I':
+            {
+                list=booklist.findval()
+            }
+            case 'n':
+            {
+
+            }
+            case 'a':
+            {
+
+            }
+            case 'k':
+            {
+
+            }
+        }
+    }
+
+    void modify(char isbn[],)
+    {
+
+    }
+
+    void buy(char isbn[],long long num)
+    {
+        if(num<=0)
+        {
+            throw Error();
+        }
+        std::vector<Book> tmp=booklist.findval(isbn);
+        if(tmp.size()==0)
+        {
+            throw Error();
+        }
+        tmp[0].Count-=num;
+        std::cout<<num*tmp[0].Price<<"\n";
+    }
 };
 
 #endif //BOOKSTORE_BOOK_H
