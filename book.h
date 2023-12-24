@@ -22,6 +22,11 @@ struct Book
         return strcmp(a.ISBN,b.ISBN)<0;
     }
 
+    friend bool operator==(const Book& a,const Book& b)
+    {
+        return strcmp(a.ISBN,b.ISBN)==0;
+    }
+
     friend std::ostream &operator<<(std::ostream &os,const Book& obj)
     {
         os<<obj.ISBN<<'\t'<<obj.BookName<<'\t'<<obj.Author<<'\t'<<obj.Keyword<<'\t'<<std::fixed<<std::setprecision(2)<<obj.Price<<'\t'<<obj.Count<<'\n';
@@ -56,7 +61,28 @@ public:
         booklist.Insert(obj.ISBN,obj);
         booknamelist.Insert(obj.BookName,isbn);
         authorlist.Insert(obj.Author,isbn);
-        keywordlist.Insert(obj.Keyword,isbn);
+        std::vector<string>keys= readkey(obj.Keyword);
+        for(int i=0;i<keys.size();i++)
+        {
+            char tmp[60];
+            strcpy(tmp,keys[i].c_str());
+            keywordlist.Insert(tmp,isbn);
+        }
+    }
+
+    void Delete(Book& obj)
+    {
+        mystr<25> isbn(obj.ISBN);
+        booklist.Delete(obj.ISBN,obj);
+        booknamelist.Delete(obj.BookName,isbn);
+        authorlist.Delete(obj.Author,isbn);
+        std::vector<string>keys= readkey(obj.Keyword);
+        for(int i=0;i<keys.size();i++)
+        {
+            char tmp[60];
+            strcpy(tmp,keys[i].c_str());
+            keywordlist.Delete(tmp,isbn);
+        }
     }
 
     void show()//无附加参数，输出所有图书
@@ -219,6 +245,7 @@ public:
     void modify(char isbn[],string &s)
     {
         Book book=booklist.findval(isbn)[0];
+        Book copy=book;
         std::vector<string> tokens;
         tokens = readkey(s);
         bool is[5]={false};//记录五种附加参数是否被调用
@@ -307,6 +334,8 @@ public:
                 }
             }
         }
+        Delete(copy);
+        insert(book);
     }
 
     void import(char isbn[],long long quantity, double totalcost)
@@ -318,7 +347,10 @@ public:
         else
         {
             Book book=booklist.findval(isbn)[0];
+            Book copy=book;
             book.Count-=quantity;
+            Delete(copy);
+            insert(book);
         }
     }
 };

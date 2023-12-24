@@ -7,13 +7,12 @@
 #include "sentenceslice.h"
 #include "error.h"
 
-std::vector<char [35]>stack;//登录栈，记录所有登录人员
-
 int main()
 {
     try
     {
         Bookinf bookinf;
+        Userinf userinf;
         while (true)
         {
             std::vector<std::string> token = readtoken();
@@ -26,7 +25,7 @@ int main()
                 }
                 else
                 {
-                    std::cout << "Invalid\\n";
+                    throw Error();
                 }
             }
             else if (token[0] == "su")
@@ -83,7 +82,7 @@ int main()
             }
             else
             {
-                std::cout << "Invalid\\n";
+                throw Error();
             }
         }
     }

@@ -38,7 +38,8 @@ public:
 
     MemoryRiver(const string& file_name) : file_name(file_name) {}
 
-    void initialise(string FN = "") {//这个初始化函数好像有点问题
+    void initialise(string FN = "")
+    {
         file_name = FN;
         file.open( file_name);
         if(!file.good())
@@ -119,21 +120,33 @@ private:
         char index[len]{0};//不能用string，否则会出现free(),invalid point
         VALUE value;
 
-        bool operator<(const element& other) const
+        friend bool operator<(const element& lhs,const element& rhs)
         {
-            if (strcmp(index,other.index)!=0)
+            if (strcmp(lhs.index,rhs.index)!=0)
             {
-                return strcmp(index,other.index)<0;
+                return strcmp(lhs.index,rhs.index)<0;
             }
             else
             {
-                return value<other.value;
+                return lhs.value<rhs.value;
             }
         }
 
-        bool operator==(const element& other) const
+        friend bool operator>(const element& lhs,const element& rhs)
         {
-            if (strcmp(index,other.index)==0 && value == other.value)
+            if (strcmp(lhs.index,rhs.index)!=0)
+            {
+                return strcmp(lhs.index,rhs.index)>0;
+            }
+            else
+            {
+                return lhs.value>rhs.value;
+            }
+        }
+
+        friend bool operator==(const element& lhs,const element& rhs)
+        {
+            if (strcmp(lhs.index,rhs.index)==0 && lhs.value == rhs.value)
             {
                 return true;
             }

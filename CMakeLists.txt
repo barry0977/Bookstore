@@ -11,4 +11,5 @@ add_executable(code main.cpp
         book.h
         user.h
         error.h
+        financelog.h
 )
