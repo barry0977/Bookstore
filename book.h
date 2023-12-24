@@ -271,6 +271,10 @@ public:
 
     void modify(string &s)
     {
+        if(stack.empty())
+        {
+            throw Error();
+        }
         User nowuser=stack.back();
         if(nowuser.Privilege<3||!nowuser.isselect)
         {
@@ -373,6 +377,10 @@ public:
     void import(long long quantity, double totalcost)
     {
         if(quantity<=0||totalcost<=0)
+        {
+            throw Error();
+        }
+        if(stack.empty())
         {
             throw Error();
         }

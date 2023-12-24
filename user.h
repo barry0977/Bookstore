@@ -68,6 +68,10 @@ public:
 
     void Delete(char id[])//删除账户
     {
+        if(stack.empty())
+        {
+            throw Error();
+        }
         User nowuser=stack.back();
         if(nowuser.Privilege<7) {throw Error();}//如果不是店主，操作失败
         if(userlist.findval(id).empty())//如果待删除帐户不存在则操作失败
@@ -229,6 +233,10 @@ public:
 
     void useradd(char id[],char passwd[],int level,char name[])
     {
+        if(stack.empty())
+        {
+            throw Error();
+        }
         User nowuser=stack.back();
         if(level>=nowuser.Privilege)//如果待创建帐户的权限等级大于等于当前帐户权限等级则操作失败
         {
@@ -258,6 +266,10 @@ public:
 
     void userselect(char isbn[])//选择图书
     {
+        if(stack.empty())
+        {
+            throw Error();
+        }
         User nowuser=stack.back();
         if(nowuser.Privilege<3)
         {
