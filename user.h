@@ -27,6 +27,12 @@ struct User
     {
         return strcmp(lhs.UserID,rhs.UserID)==0;
     }
+
+    friend std::ostream &operator<<(std::ostream &os,const User& obj)
+    {
+        os<<obj.UserID<<'\t'<<obj.Password<<'\t'<<obj.Username<<'\t'<<obj.Privilege<<'\n';
+        return os;
+    }
 };
 
 extern std::vector<User>stack;//登录栈，记录所有登录人员,当前操作人员为登录栈的最后一个
@@ -112,6 +118,7 @@ public:
 
     void su(char id[],char password[])//登录账户
     {
+        userlist.display();
         std::vector<User>user=userlist.findval(id);
         if(user.empty())//如果该帐户不存在则操作失败
         {
@@ -119,7 +126,8 @@ public:
         }
         if(stack.empty())//如果登录栈为空
         {
-            if(strcmp(user[0].Password,password)==0)
+            //std::cout<<user[0].Password<<' '<<sizeof(user[0])<<' '<<password<<' '<<sizeof(password)<<'\n';
+            if(trim(user[0].Password)==trim(password))
             {
                 stack.push_back(user[0]);
             }
@@ -137,7 +145,8 @@ public:
             }
             else
             {
-                if(strcmp(user[0].Password,nowuser.Password)==0)
+                //std::cout<<user[0].Password<<' '<<sizeof(user[0])<<' '<<password<<' '<<sizeof(password)<<'\n';
+                if(trim(user[0].Password)==trim(password))
                 {
                     stack.push_back(user[0]);
                 }
@@ -185,7 +194,9 @@ public:
             {
                 strcpy(obj.Password,newpasswd);
                 userlist.Delete(id,copy);
+                std::cout<<obj.Password<<'\n';
                 userlist.Insert(id,obj);
+                userlist.display();
             }
             else
             {
@@ -217,7 +228,7 @@ public:
             }
             else
             {
-                if(strcmp(obj.Password,current)!=0)//如果密码错误则操作失败
+                if(trim(obj.Password)!=trim(current))//如果密码错误则操作失败
                 {
                     throw Error();
                 }

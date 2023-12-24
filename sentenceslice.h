@@ -112,4 +112,16 @@ double stringToReal(std::string str)
     }
     return value;
 }
+
+std::string trim(std::string str) {
+    int finish = str.length() - 1;
+    while (finish >= 0 && isspace(str[finish])) {
+        finish--;
+    }
+    int start = 0;
+    while (start <= finish && isspace(str[start])) {
+        start++;
+    }
+    return str.substr(start, finish - start + 1);
+}
 #endif
