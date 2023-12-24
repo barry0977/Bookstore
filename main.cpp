@@ -18,8 +18,11 @@ int main()
     //freopen("testcase3.in","r",stdin);
     //freopen("out.txt","w",stdout);
     std::string input;
+    //int line=0;
     while (std::getline(std::cin,input))
     {
+        //line++;
+        //std::cout<<line<<" ";
         try
         {
             std::vector<std::string> token = readtokens(input);

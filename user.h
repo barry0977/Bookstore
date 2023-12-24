@@ -55,6 +55,11 @@ public:
         }
     }
 
+    void show()
+    {
+        userlist.display();
+    }
+
     void regist(char id[],char passwd[],char name[])
     {
         if(userlist.findval(id).empty())//用户库中没有同样的id
@@ -64,7 +69,7 @@ public:
             strcpy(tmp.Password,passwd);
             strcpy(tmp.Username,name);
             tmp.Privilege=1;
-            userlist.Insert(tmp.UserID,tmp);
+            userlist.Insert(id,tmp);
         }
         else
         {
@@ -125,6 +130,7 @@ public:
         }
         if(stack.empty())//如果登录栈为空
         {
+            //ootstd::cout<<user[0].Password<<' '<<password<<'\n';
             if(trim(user[0].Password)==trim(password))
             {
                 stack.push_back(user[0]);
@@ -143,6 +149,7 @@ public:
             }
             else
             {
+                std::cout<<user[0].Password<<' '<<password<<'\n';
                 if(trim(user[0].Password)==trim(password))
                 {
                     stack.push_back(user[0]);
@@ -163,11 +170,11 @@ public:
         }
         else
         {
-            User obj=stack.back();
-            User copy=obj;
-            obj.isselect=false;
-            userlist.Delete(copy.UserID,copy);
-            userlist.Insert(obj.UserID,obj);
+            //User obj=stack.back();
+            //User copy=obj;
+            //obj.isselect=false;
+            //userlist.Delete(copy.UserID,copy);
+            //userlist.Insert(obj.UserID,obj);
             stack.pop_back();
         }
     }
@@ -184,13 +191,12 @@ public:
         }
         else
         {
-            User obj=userlist.findval(id)[0];
-            User copy=obj;
             User nowuser=stack.back();
             if(nowuser.Privilege==7)//如果当前帐户权限等级为 {7} 则可以省略 [CurrentPassword]
             {
+                User obj=userlist.findval(id)[0];
+                userlist.Delete(id,obj);
                 strcpy(obj.Password,newpasswd);
-                userlist.Delete(id,copy);
                 userlist.Insert(id,obj);
             }
             else
@@ -286,7 +292,6 @@ public:
         strcpy(nowuser.selectiisdn,isbn);
         stack.push_back(nowuser);
     }
-
 };
 
 #endif //BOOKSTORE_USER_H
