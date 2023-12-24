@@ -21,6 +21,18 @@ std::vector<std::string> readtoken()//把读入的语句以空格为分隔符切
     return token;
 }
 
+std::vector<std::string> readtokens(const std::string& str) {
+    std::vector<std::string> result;
+    std::istringstream iss(str);
+    std::string token;
+
+    while (std::getline(iss, token, ' ')) {
+        result.push_back(token);
+    }
+
+    return result;
+}
+
 std::vector<std::string> readkey(std::string input)//把读入的语句以|为分隔符切片
 {
     std::vector<std::string> subStrings;
@@ -31,6 +43,33 @@ std::vector<std::string> readkey(std::string input)//把读入的语句以|为�
         subStrings.push_back(token);
     }
     return subStrings;
+}
+
+bool is1(const std::string& str) {//是否都是字母数字下划线
+    for (char c : str) {
+        if (!isalnum(c) && c != '_') {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is2(const std::string& str) {//是否都是除不可见字符以外ASCII字符
+    for (char c : str) {
+        if (!isprint(c)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is3(const std::string& str) {//是否都是除不可见字符和英文双引号以外ASCII字符
+    for (char c : str) {
+        if (!isprint(c) && c != '"') {
+            return false;
+        }
+    }
+    return true;
 }
 
 std::string integerToString(int n)

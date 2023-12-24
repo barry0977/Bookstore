@@ -6,6 +6,7 @@
 #define BOOKSTORE_USER_H
 #include "blockchain.h"
 #include "error.h"
+#include "book.h"
 #include <algorithm>
 
 struct User
@@ -28,7 +29,7 @@ struct User
     }
 };
 
-std::vector<User>stack;//登录栈，记录所有登录人员,当前操作人员为登录栈的最后一个
+extern std::vector<User>stack;//登录栈，记录所有登录人员,当前操作人员为登录栈的最后一个
 
 class Userinf
 {
@@ -38,9 +39,13 @@ public:
     Userinf()
     {
         userlist.initial("userinfo");
-        if(userlist.findval("root").empty())
+        if(userlist.isfirst())//程序首次运行时自主执行所需的初始化操作；创建帐户名为 root，密码为 sjtu，权限为 {7} 的超级管理员帐户。
         {
-            regist("root",)
+            User boss;
+            strcpy(boss.UserID,"root");
+            boss.Privilege=7;
+            strcpy(boss.Password,"sjtu");
+            userlist.Insert("root",boss);
         }
     }
 
@@ -53,7 +58,7 @@ public:
             strcpy(tmp.Password,passwd);
             strcpy(tmp.Username,name);
             tmp.Privilege=1;
-            userlist.Insert(tmp);
+            userlist.Insert(tmp.UserID,tmp);
         }
         else
         {
@@ -119,7 +124,11 @@ public:
         }
         else
         {
-            userlist.findval(stack.back().UserID)[0].
+            User obj=stack.back();
+            User copy=obj;
+            obj.isselect=false;
+            userlist.Delete(copy.UserID,copy);
+            userlist.Insert(obj.UserID,obj);
             stack.pop_back();
         }
     }
@@ -132,7 +141,32 @@ public:
         }
         else
         {
-
+            User obj=userlist.findval(id)[0];
+            User copy=obj;
+            User nowuser=stack.back();
+            if(nowuser.Privilege==7)//如果当前帐户权限等级为 {7} 则可以省略 [CurrentPassword]
+            {
+                strcpy(obj.Password,newpasswd);
+                userlist.Delete(id,copy);
+                userlist.Insert(id,obj);
+            }
+            else
+            {
+                if(strcmp(current,"")==0)
+                {
+                    throw Error();
+                }
+                if(strcmp(obj.Password,current)!=0)//如果密码错误则操作失败
+                {
+                    throw Error();
+                }
+                else
+                {
+                    strcpy(obj.Password,newpasswd);
+                    userlist.Delete(id,copy);
+                    userlist.Insert(id,obj);
+                }
+            }
         }
     }
 
@@ -164,6 +198,18 @@ public:
             }
         }
     }
+
+    void userselect(char isbn[])//选择图书
+    {
+        User nowuser=stack.back();
+        if(nowuser.Privilege<3)
+        {
+            throw Error();
+        }
+        nowuser.isselect=true;
+        strcpy(nowuser.selectiisdn,isbn);
+    }
+
 };
 
 #endif //BOOKSTORE_USER_H

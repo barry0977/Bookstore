@@ -8,7 +8,7 @@
 #include <queue>
 #include <iostream>
 #include <iomanip>
-
+#include "user.h"
 using std::string;
 using std::fstream;
 using std::ifstream;
@@ -27,9 +27,10 @@ private:
     string file_name;
     int sizeofT = sizeof(T);
 public:
-    Financelog() = default;
-
-    Financelog(const string& file_name) : file_name(file_name) {}
+    Financelog()
+    {
+        initialise("financelog");
+    }
 
     void initialise(string FN = "")
     {
@@ -78,6 +79,11 @@ public:
 
     void show()
     {
+        User nowuser=stack.back();
+        if(nowuser.Privilege<7)
+        {
+            throw Error();
+        }
         file.open(file_name,std::ios::in|std::ios::out);
         info tmp;
         T add=0;
@@ -103,6 +109,11 @@ public:
 
     void show(long long num)
     {
+        User nowuser=stack.back();
+        if(nowuser.Privilege<7)
+        {
+            throw Error();
+        }
         file.open(file_name,std::ios::in|std::ios::out);
         info tmp;
         T add=0;

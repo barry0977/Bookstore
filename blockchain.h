@@ -192,6 +192,22 @@ public:
         memoryriver.initialise(filename);
     }
 
+    bool isfirst()//判断是否是第一次操作文件
+    {
+        bool is;
+        blockinf<firstblock> tmp;
+        memoryriver.get_info(tmp);
+        if(tmp.block1.number==0)
+        {
+            is=true;
+        }
+        else
+        {
+            is=false;
+        }
+        return is;
+    }
+
     void initial(string filename)
     {
         memoryriver.initialise(filename);
