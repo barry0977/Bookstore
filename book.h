@@ -296,7 +296,11 @@ public:
                     }
                     char revise[25];
                     strcpy(revise,substring.c_str());
-                    if(strcmp(book.ISBN,revise)==0)
+                    /*if(strcmp(book.ISBN,revise)==0)
+                    {
+                        throw Error();
+                    }*/
+                    if(trim(book.ISBN)== trim(revise))
                     {
                         throw Error();
                     }

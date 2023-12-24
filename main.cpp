@@ -15,6 +15,8 @@ Financelog<double> financeinf;
 
 int main()
 {
+    //freopen("testcase3.in","r",stdin);
+    //freopen("out.txt","w",stdout);
     std::string input;
     while (std::getline(std::cin,input))
     {

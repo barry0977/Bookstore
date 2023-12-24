@@ -118,7 +118,6 @@ public:
 
     void su(char id[],char password[])//登录账户
     {
-        userlist.display();
         std::vector<User>user=userlist.findval(id);
         if(user.empty())//如果该帐户不存在则操作失败
         {
@@ -126,7 +125,6 @@ public:
         }
         if(stack.empty())//如果登录栈为空
         {
-            //std::cout<<user[0].Password<<' '<<sizeof(user[0])<<' '<<password<<' '<<sizeof(password)<<'\n';
             if(trim(user[0].Password)==trim(password))
             {
                 stack.push_back(user[0]);
@@ -145,7 +143,6 @@ public:
             }
             else
             {
-                //std::cout<<user[0].Password<<' '<<sizeof(user[0])<<' '<<password<<' '<<sizeof(password)<<'\n';
                 if(trim(user[0].Password)==trim(password))
                 {
                     stack.push_back(user[0]);
@@ -194,9 +191,7 @@ public:
             {
                 strcpy(obj.Password,newpasswd);
                 userlist.Delete(id,copy);
-                std::cout<<obj.Password<<'\n';
                 userlist.Insert(id,obj);
-                userlist.display();
             }
             else
             {
