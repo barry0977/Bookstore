@@ -45,7 +45,7 @@ public:
             strcpy(boss.UserID,"root");
             boss.Privilege=7;
             strcpy(boss.Password,"sjtu");
-            userlist.Insert("root",boss);
+            userlist.Insert(boss.UserID,boss);
         }
     }
 
@@ -88,16 +88,45 @@ public:
         }
     }
 
-    void su(char id[],char password[]="")//登录账户
+    void su(char id[])//登录账户
     {
-        User nowuser=stack.back();
         std::vector<User>user=userlist.findval(id);
         if(user.empty())//如果该帐户不存在则操作失败
         {
             throw Error();
         }
+        if(stack.empty())//如果登录栈为空，则必须输入密码
+        {
+            throw Error();
+        }
+        if(stack.back().Privilege<=user[0].Privilege)
+        {
+            throw Error();
+        }
+        stack.push_back(user[0]);
+    }
+
+    void su(char id[],char password[])//登录账户
+    {
+        std::vector<User>user=userlist.findval(id);
+        if(user.empty())//如果该帐户不存在则操作失败
+        {
+            throw Error();
+        }
+        if(stack.empty())//如果登录栈为空
+        {
+            if(strcmp(user[0].Password,password)==0)
+            {
+                stack.push_back(user[0]);
+            }
+            else//如果密码错误则操作失败
+            {
+                throw Error();
+            }
+        }
         else
         {
+            User nowuser=stack.back();
             if(user[0].Privilege<nowuser.Privilege)//如果当前帐户权限等级高于登录帐户则可以省略密码
             {
                 stack.push_back(user[0]);
@@ -133,9 +162,13 @@ public:
         }
     }
 
-    void passwd(char id[],char newpasswd[],char current[]="")//修改密码
+    void passwd(char id[],char newpasswd[])//修改密码
     {
         if(userlist.findval(id).empty())//如果该帐户不存在则操作失败
+        {
+            throw Error();
+        }
+        if(stack.empty())
         {
             throw Error();
         }
@@ -152,10 +185,34 @@ public:
             }
             else
             {
-                if(strcmp(current,"")==0)
-                {
-                    throw Error();
-                }
+                throw Error();
+            }
+        }
+    }
+
+    void passwd(char id[],char newpasswd[],char current[])//修改密码
+    {
+        if(userlist.findval(id).empty())//如果该帐户不存在则操作失败
+        {
+            throw Error();
+        }
+        if(stack.empty())
+        {
+            throw Error();
+        }
+        else
+        {
+            User obj=userlist.findval(id)[0];
+            User copy=obj;
+            User nowuser=stack.back();
+            if(nowuser.Privilege==7)//如果当前帐户权限等级为 {7} 则可以省略 [CurrentPassword]
+            {
+                strcpy(obj.Password,newpasswd);
+                userlist.Delete(id,copy);
+                userlist.Insert(id,obj);
+            }
+            else
+            {
                 if(strcmp(obj.Password,current)!=0)//如果密码错误则操作失败
                 {
                     throw Error();

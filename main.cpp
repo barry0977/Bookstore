@@ -15,9 +15,10 @@ Financelog<double> financeinf;
 
 int main()
 {
-    try {
-        std::string input;
-        while (std::getline(std::cin,input))
+    std::string input;
+    while (std::getline(std::cin,input))
+    {
+        try
         {
             std::vector<std::string> token = readtokens(input);
             int l = token.size();
@@ -113,13 +114,13 @@ int main()
                 {
                     throw Error();
                 }
-                if(token[1].size()>30||token[2].size()>30||token[4].size()||!is1(token[1])||!is1(token[2])||!is2(token[4]))
+                if(token[1].size()>30||token[2].size()>30||token[4].size()>30||!is1(token[1])||!is1(token[2])||!is2(token[4]))
                 {
                     throw Error();
                 }
                 char id[35],pw[35],name[35];
                 int pri= stringToInteger(token[3]);
-                if(pri!=1||pri!=3||pri!=7)
+                if(pri!=1&&pri!=3&&pri!=7)
                 {
                     throw Error();
                 }
@@ -282,10 +283,10 @@ int main()
             {
                 throw Error();
             }
+        }catch (Error)
+        {
+            error();
         }
-    }catch (Error )
-    {
-        error();
     }
     return 0;
 }
