@@ -86,7 +86,7 @@ int main()
             {
                 if(l==3)
                 {
-                    if(token[1].size()>30||token[2].size()||!is1(token[1])||!is1(token[2]))
+                    if(token[1].size()>30||token[2].size()>30||!is1(token[1])||!is1(token[2]))
                     {
                         throw Error();
                     }
@@ -97,7 +97,7 @@ int main()
                 }
                 else if(l==4)
                 {
-                    if(token[1].size()>30||token[2].size()||token[3].size()>30||!is1(token[1])||!is1(token[2])||!is1(token[3]))
+                    if(token[1].size()>30||token[2].size()>30||token[3].size()>30||!is1(token[1])||!is1(token[2])||!is1(token[3]))
                     {
                         throw Error();
                     }
