@@ -271,12 +271,14 @@ public:
             throw Error();
         }
         User nowuser=stack.back();
+        stack.pop_back();
         if(nowuser.Privilege<3)
         {
             throw Error();
         }
         nowuser.isselect=true;
         strcpy(nowuser.selectiisdn,isbn);
+        stack.push_back(nowuser);
     }
 
 };
