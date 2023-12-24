@@ -24,8 +24,6 @@ public:
 
 class Customer:public Visitor
 {
-protected:
-    privilege=1;
 public:
     void revise(std::string oldpassword,string newpassword)
     {
@@ -47,17 +45,23 @@ public:
 
 };
 
-struct User
+struct Userinf
 {
     char UserID[35]{};
     char Password[35]{};
     char Username[35]{};
     int Privilege=0;
 
-    bool operator<(const User& other)const
+    friend bool operator<(const Userinf& lhs,co)
     {
         return strcmp(UserID,other.UserID)<0;
     }
+};
+
+class User
+{
+private:
+
 };
 
 class userinf
@@ -65,7 +69,7 @@ class userinf
 private:
     blockchain<35,User>userlist;
 public:
-    void insert(User& obj)
+    void insert(Userinf& obj)
     {
         userlist.Insert(obj.UserID,obj);
     }
