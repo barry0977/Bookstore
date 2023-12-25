@@ -294,7 +294,7 @@ public:
 
     void modify(string &s)
     {
-        booklist.display();
+        //booklist.display();
         if(stack.empty())
         {
             throw Error();
