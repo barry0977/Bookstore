@@ -323,11 +323,15 @@ public:
                         throw Error();
                     }
                     strcpy(book.ISBN,substring.c_str());
+                    stack.pop_back();
+                    strcpy(nowuser.selectisdn,book.ISBN);
+                    stack.push_back(nowuser);
                 }
                 break;
             }
             case 'n':
             {
+                //std::cout<<"enter modify name\n";
                 if(s.size()==6) { throw Error(); }
                 else
                 {
