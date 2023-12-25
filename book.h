@@ -66,15 +66,26 @@ public:
     void bookinsert(Book& obj)
     {
         mystr<25> isbn(obj.ISBN);
+
+        std::cout<<"插入前信息： ";
+        booklist.display();
+
         booklist.Insert(obj.ISBN,obj);
-        booknamelist.Insert(obj.BookName,isbn);
-        authorlist.Insert(obj.Author,isbn);
-        std::vector<string>keys= readkey(obj.Keyword);
-        for(int i=0;i<keys.size();i++)
+
+        std::cout<<"插入后信息： ";
+        booklist.display();
+
+        if(strlen(obj.BookName)!=0) booknamelist.Insert(obj.BookName,isbn);
+        if(strlen(obj.Author)!=0) authorlist.Insert(obj.Author,isbn);
+        if(strlen(obj.Keyword)!=0)
         {
-            char tmp[60];
-            strcpy(tmp,keys[i].c_str());
-            keywordlist.Insert(tmp,isbn);
+            std::vector<string>keys= readkey(obj.Keyword);
+            for(int i=0;i<keys.size();i++)
+            {
+                char tmp[60];
+                strcpy(tmp,keys[i].c_str());
+                keywordlist.Insert(tmp,isbn);
+            }
         }
     }
 
@@ -259,33 +270,39 @@ public:
 
     void select(char isbn[])
     {
+        std::cout<<"first ";
+        booklist.display();
+
         if(stack.empty())
         {
             throw Error();
         }
         User nowuser=stack.back();
-        stack.pop_back();
         if(nowuser.Privilege<3)
         {
             throw Error();
         }
-        nowuser.isselect=true;
-        strcpy(nowuser.selectisdn,isbn);
-        stack.push_back(nowuser);
-        //std::cout<<nowuser.selectisdn<<'\n';
+        stack[stack.size()-1].isselect=true;
+        strcpy(stack[stack.size()-1].selectisdn,isbn);
+
+        std::cout<<"second ";
+        booklist.display();
+
         std::vector<Book>tmp=booklist.findval(isbn);
         if(tmp.empty())//如果没有符合条件的图书，则创建仅拥有ISBN信息的新图书
         {
             Book obj;
             strcpy(obj.ISBN,isbn);
             bookinsert(obj);
-            //std::cout<<"create success\n";
-            //booklist.display();
         }
+
+        std::cout<<"third ";
+        booklist.display();
     }
 
     void modify(string &s)
     {
+        booklist.display();
         if(stack.empty())
         {
             throw Error();
@@ -378,9 +395,7 @@ public:
                             }
                         }
                     }
-                    char keyword[65];
-                    strcpy(keyword,substring.c_str());
-                    strcpy(book.Keyword,keyword);
+                    strcpy(book.Keyword,substring.c_str());
                 }
                 break;
             }
@@ -395,8 +410,11 @@ public:
                 }
             }
         }
+        std::cout<<"run Delete\n";
         Delete(copy);
+        std::cout<<"run bookinsert\n";
         bookinsert(book);
+        booklist.display();
     }
 
     void import(long long quantity, double totalcost)

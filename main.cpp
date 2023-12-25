@@ -15,12 +15,13 @@ Financelog<double> financeinf;
 
 int main()
 {
-    //freopen("testcase3.in","r",stdin);
+    //freopen("in.txt","r",stdin);
     //freopen("out.txt","w",stdout);
     std::string input;
     //int line=0;
     while (std::getline(std::cin,input))
     {
+        //bookinf.show();
         //line++;
         //std::cout<<line<<" ";
         try
@@ -293,6 +294,7 @@ int main()
         {
             error();
         }
+        //bookinf.show();
     }
     return 0;
 }

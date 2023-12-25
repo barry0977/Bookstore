@@ -645,16 +645,23 @@ public:
     {
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
+
+        std::cout<<"块数："<<tmp.block1.number<<"\n";//
+
         for(int i =0;i<tmp.block1.number;i++)
         {
             block btmp;
             memoryriver.read(btmp,tmp.block1.minindex[i]);
+
+            std::cout<<"元素数: "<<btmp.booknum<<"\n";//
+
             for(int j=0;j<btmp.booknum;j++)
             {
                 std::cout<<btmp.blocklist[j].value;
             }
         }
     }
+
 };
 
 template<int len>
