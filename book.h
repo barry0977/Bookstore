@@ -5,8 +5,6 @@
 #ifndef BOOKSTORE_BOOK_H
 #define BOOKSTORE_BOOK_H
 #include <iomanip>
-#include<iostream>
-#include<cstring>
 #include "blockchain.h"
 #include "error.h"
 #include "sentenceslice.h"
@@ -68,15 +66,7 @@ public:
     void bookinsert(Book& obj)
     {
         mystr<25> isbn(obj.ISBN);
-
-        //std::cout<<"插入前信息： ";
-        //booklist.display();
-
         booklist.Insert(obj.ISBN,obj);
-
-        //std::cout<<"插入后信息： ";
-        //booklist.display();
-
         if(strlen(obj.BookName)!=0) booknamelist.Insert(obj.BookName,isbn);
         if(strlen(obj.Author)!=0) authorlist.Insert(obj.Author,isbn);
         if(strlen(obj.Keyword)!=0)
@@ -279,10 +269,15 @@ public:
             throw Error();
         }
         User nowuser=stack.back();
+        stack.pop_back();
         if(nowuser.Privilege<3)
         {
             throw Error();
         }
+        nowuser.isselect=true;
+        strcpy(nowuser.selectisdn,isbn);
+        stack.push_back(nowuser);
+        //std::cout<<nowuser.selectisdn<<'\n';
         std::vector<Book>tmp=booklist.findval(isbn);
         if(tmp.empty())//如果没有符合条件的图书，则创建仅拥有ISBN信息的新图书
         {
@@ -290,8 +285,6 @@ public:
             strcpy(obj.ISBN,isbn);
             bookinsert(obj);
         }
-        stack[stack.size()-1].isselect=true;
-        strcpy(stack[stack.size()-1].selectisdn,isbn);
     }
 
     void modify(string &s)
@@ -305,9 +298,8 @@ public:
         {
             throw Error();
         }
-        std::vector<Book>obj=booklist.findval(nowuser.selectisdn);
-        Book book,copy;
-        book =copy =obj[0];
+        Book book=booklist.findval(nowuser.selectisdn)[0];//出问题
+        Book copy=book;
         switch(s[1])
         {
             case 'I':
@@ -326,11 +318,12 @@ public:
                     {
                         throw Error();
                     }
-                    else
-                    {
-                        strcpy(book.ISBN, substring.c_str());
-                        strcpy(stack[stack.size()-1].selectisdn,substring.c_str());
-                    }
+                    strcpy(book.ISBN,substring.c_str());
+                    stack.pop_back();
+                    strcpy(nowuser.selectisdn,book.ISBN);
+                    stack.push_back(nowuser);
+                    bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
+                    Delete(copy);
                 }
                 break;
             }
@@ -344,7 +337,12 @@ public:
                     {
                         throw Error();
                     }
-                    strcpy(book.BookName,substring.c_str());
+                    if(trim(book.BookName)!=trim(substring))
+                    {
+                        strcpy(book.BookName,substring.c_str());
+                        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
+                        Delete(copy);
+                    }
                 }
                 break;
             }
@@ -358,7 +356,12 @@ public:
                     {
                         throw Error();
                     }
-                    strcpy(book.Author,substring.c_str());
+                    if(trim(book.Author)!=trim(substring))
+                    {
+                        strcpy(book.Author,substring.c_str());
+                        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
+                        Delete(copy);
+                    }
                 }
                 break;
             }
@@ -383,7 +386,11 @@ public:
                             }
                         }
                     }
-                    strcpy(book.Keyword,substring.c_str());
+                    if(trim(book.Keyword)!=trim(substring)) {
+                        strcpy(book.Keyword, substring.c_str());
+                        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
+                        Delete(copy);
+                    }
                 }
                 break;
             }
@@ -394,12 +401,15 @@ public:
                 {
                     std::string substring=s.substr(7);//获取price
                     double price= stringToReal(substring);
-                    book.Price=price;
+                    if(book.Price!=price)
+                    {
+                        book.Price = price;
+                        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
+                        Delete(copy);
+                    }
                 }
             }
         }
-        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
-        Delete(copy);
     }
 
     void import(long long quantity, double totalcost)
