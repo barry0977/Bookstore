@@ -67,13 +67,13 @@ public:
     {
         mystr<25> isbn(obj.ISBN);
 
-        std::cout<<"插入前信息： ";
-        booklist.display();
+        //std::cout<<"插入前信息： ";
+        //booklist.display();
 
         booklist.Insert(obj.ISBN,obj);
 
-        std::cout<<"插入后信息： ";
-        booklist.display();
+        //std::cout<<"插入后信息： ";
+        //booklist.display();
 
         if(strlen(obj.BookName)!=0) booknamelist.Insert(obj.BookName,isbn);
         if(strlen(obj.Author)!=0) authorlist.Insert(obj.Author,isbn);
