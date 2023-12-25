@@ -63,7 +63,7 @@ public:
         keywordlist.initial("Keywordlist");
     }
 
-    void insert(Book& obj)
+    void bookinsert(Book& obj)
     {
         mystr<25> isbn(obj.ISBN);
         booklist.Insert(obj.ISBN,obj);
@@ -260,12 +260,28 @@ public:
 
     void select(char isbn[])
     {
+        if(stack.empty())
+        {
+            throw Error();
+        }
+        User nowuser=stack.back();
+        stack.pop_back();
+        if(nowuser.Privilege<3)
+        {
+            throw Error();
+        }
+        nowuser.isselect=true;
+        strcpy(nowuser.selectisdn,isbn);
+        stack.push_back(nowuser);
+        //std::cout<<nowuser.selectisdn<<'\n';
         std::vector<Book>tmp=booklist.findval(isbn);
         if(tmp.empty())//如果没有符合条件的图书，则创建仅拥有ISBN信息的新图书
         {
             Book obj;
             strcpy(obj.ISBN,isbn);
-            insert(obj);
+            bookinsert(obj);
+            //std::cout<<"create success\n";
+            //booklist.display();
         }
     }
 
@@ -280,7 +296,9 @@ public:
         {
             throw Error();
         }
-        Book book=booklist.findval(nowuser.selectiisdn)[0];
+        //std::cout<<"step1\n";
+        Book book=booklist.findval(nowuser.selectisdn)[0];//出问题
+        //std::cout<<"step2\n";
         Book copy=book;
         switch(s[1])
         {
@@ -375,7 +393,7 @@ public:
             }
         }
         Delete(copy);
-        insert(book);
+        bookinsert(book);
     }
 
     void import(long long quantity, double totalcost)
@@ -400,12 +418,12 @@ public:
         else
         {
 
-            Book book=booklist.findval(nowuser.selectiisdn)[0];
+            Book book=booklist.findval(nowuser.selectisdn)[0];
             Book copy=book;
             book.Count-=quantity;
             financeinf.write(totalcost);
             Delete(copy);
-            insert(book);
+            bookinsert(book);
         }
     }
 };

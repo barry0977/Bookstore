@@ -200,9 +200,10 @@ int main()
                 {
                     throw Error();
                 }
+                //std::cout<<"enter select\n";
                 char isbn[25];
                 strcpy(isbn,token[1].c_str());
-                userinf.userselect(isbn);
+                bookinf.select(isbn);
             }
             else if (token[0] == "modify")
             {
@@ -218,7 +219,7 @@ int main()
                         is[0]=true;
                         bookinf.modify(token[i]);
                     }
-                    if(token[i][1]=='n')
+                    else if(token[i][1]=='n')
                     {
                         if(is[1])
                         {
@@ -227,7 +228,7 @@ int main()
                         is[1]=true;
                         bookinf.modify(token[i]);
                     }
-                    if(token[i][1]=='a')
+                    else if(token[i][1]=='a')
                     {
                         if(is[2])
                         {
@@ -236,7 +237,7 @@ int main()
                         is[2]=true;
                         bookinf.modify(token[i]);
                     }
-                    if(token[i][1]=='k')
+                    else if(token[i][1]=='k')
                     {
                         if(is[3])
                         {
@@ -245,7 +246,7 @@ int main()
                         is[3]=true;
                         bookinf.modify(token[i]);
                     }
-                    if(token[i][1]=='p')
+                    else if(token[i][1]=='p')
                     {
                         if(is[4])
                         {

@@ -16,7 +16,7 @@ struct User
     char Username[35]{};
     int Privilege=0;
     bool isselect=false;
-    char selectiisdn[25]{};
+    char selectisdn[25]{};
 
     friend bool operator<(const User& lhs,const User& rhs)
     {
@@ -289,7 +289,7 @@ public:
             throw Error();
         }
         nowuser.isselect=true;
-        strcpy(nowuser.selectiisdn,isbn);
+        strcpy(nowuser.selectisdn,isbn);
         stack.push_back(nowuser);
     }
 };
