@@ -395,8 +395,6 @@ public:
                     std::string substring=s.substr(7);//获取price
                     double price= stringToReal(substring);
                     book.Price=price;
-                    Delete(copy);
-                    bookinsert(book);
                 }
             }
         }
