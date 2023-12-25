@@ -108,7 +108,6 @@ public:
         {
             throw Error();
         }
-        std::vector<Book>list;
         switch(s[1])
         {
             case 'I':
@@ -363,7 +362,7 @@ public:
                 if(s.size()==8) { throw Error(); }
                 else
                 {
-                    std::string substring = s.substr(10, s.size() - 10);//获取keyword
+                    std::string substring = s.substr(10, s.size() - 11);//获取keyword
                     if(substring.size()>60||!is3(substring))
                     {
                         throw Error();
