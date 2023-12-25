@@ -266,13 +266,12 @@ public:
         }
         tmp[0].Count-=num;
         std::cout<<num*tmp[0].Price<<"\n";
+        double profit=num*tmp[0].Price;
+        financeinf.write(profit);
     }
 
     void select(char isbn[])
     {
-        std::cout<<"first ";
-        booklist.display();
-
         if(stack.empty())
         {
             throw Error();
@@ -284,10 +283,6 @@ public:
         }
         stack[stack.size()-1].isselect=true;
         strcpy(stack[stack.size()-1].selectisdn,isbn);
-
-        std::cout<<"second ";
-        booklist.display();
-
         std::vector<Book>tmp=booklist.findval(isbn);
         if(tmp.empty())//如果没有符合条件的图书，则创建仅拥有ISBN信息的新图书
         {
@@ -295,9 +290,6 @@ public:
             strcpy(obj.ISBN,isbn);
             bookinsert(obj);
         }
-
-        std::cout<<"third ";
-        booklist.display();
     }
 
     void modify(string &s)
@@ -312,9 +304,7 @@ public:
         {
             throw Error();
         }
-        //std::cout<<"step1\n";
-        Book book=booklist.findval(nowuser.selectisdn)[0];//出问题
-        //std::cout<<"step2\n";
+        Book book=booklist.findval(nowuser.selectisdn)[0];
         Book copy=book;
         switch(s[1])
         {
@@ -330,10 +320,6 @@ public:
                     }
                     char revise[25];
                     strcpy(revise,substring.c_str());
-                    /*if(strcmp(book.ISBN,revise)==0)
-                    {
-                        throw Error();
-                    }*/
                     if(trim(book.ISBN)== trim(revise))
                     {
                         throw Error();
@@ -347,7 +333,6 @@ public:
             }
             case 'n':
             {
-                //std::cout<<"enter modify name\n";
                 if(s.size()==6) { throw Error(); }
                 else
                 {
@@ -410,11 +395,8 @@ public:
                 }
             }
         }
-        std::cout<<"run Delete\n";
         Delete(copy);
-        std::cout<<"run bookinsert\n";
         bookinsert(book);
-        booklist.display();
     }
 
     void import(long long quantity, double totalcost)
