@@ -44,7 +44,7 @@ public:
         file.open( file_name);
         if(!file.good())
         {
-            file.open( file_name,std::ios::out);
+            file.open( file_name,std::ios::out|std::ios::binary);
             file.close();
             file.open( file_name);
             file.write(reinterpret_cast<char*>(&emptyblock), sizeof(blockinf<S>));
@@ -54,7 +54,7 @@ public:
 
     //读出首个块
     void get_info(blockinf<S>& tmp) {
-        file.open(file_name);
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         file.seekg(0);
         file.read(reinterpret_cast<char*>(&tmp), sizeof(blockinf<S>));
         file.close();
@@ -62,7 +62,7 @@ public:
 
     //将新的索引写入首个块中
     void write_info(blockinf<S> tmp) {
-        file.open(file_name);
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         file.seekp(0);
         file.write(reinterpret_cast<char*>(&tmp), sizeof(blockinf<S>));
         file.close();
@@ -76,7 +76,7 @@ public:
         get_info(tmp);
         if(tmp.len>0)//如果有空出来的区域，则写在那里
         {
-            file.open(file_name,std::ios::in|std::ios::out);
+            file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
             int index=tmp.emptyinf[emptyblock.len-1];
             tmp.len--;
             file.seekp(index,std::ios::beg);
@@ -86,7 +86,7 @@ public:
         }
         else
         {
-            file.open(file_name, std::ios::app);
+            file.open(file_name, std::ios::app|std::ios::binary);
             int index = file.tellp();
             file.write(reinterpret_cast<char *>(&t), sizeofT);
             file.close();
@@ -96,7 +96,7 @@ public:
 
     //用t的值更新位置索引index对应的对象，保证调用的index都是由write函数产生
     void update(T& t, const int index) {
-        file.open(file_name);
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         file.seekg(index);
         file.write(reinterpret_cast<char*>(&t), sizeofT);
         file.close();
@@ -104,7 +104,7 @@ public:
 
     //读出位置索引index对应的T对象的值并赋值给t，保证调用的index都是由write函数产生
     void read(T& t, const int index) {
-        file.open(file_name);
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         file.seekg(index);
         file.read(reinterpret_cast<char*>(&t), sizeofT);
         file.close();
@@ -655,7 +655,6 @@ public:
             }
         }
     }
-
 };
 
 template<int len>

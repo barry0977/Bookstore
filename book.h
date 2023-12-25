@@ -281,8 +281,6 @@ public:
         {
             throw Error();
         }
-        stack[stack.size()-1].isselect=true;
-        strcpy(stack[stack.size()-1].selectisdn,isbn);
         std::vector<Book>tmp=booklist.findval(isbn);
         if(tmp.empty())//如果没有符合条件的图书，则创建仅拥有ISBN信息的新图书
         {
@@ -290,22 +288,24 @@ public:
             strcpy(obj.ISBN,isbn);
             bookinsert(obj);
         }
+        stack[stack.size()-1].isselect=true;
+        strcpy(stack[stack.size()-1].selectisdn,isbn);
     }
 
     void modify(string &s)
     {
-        //booklist.display();
-        if(stack.empty())
+        if(stack.empty())//如果登录栈为空
         {
             throw Error();
         }
         User nowuser=stack.back();
-        if(nowuser.Privilege<3||!nowuser.isselect)
+        if(nowuser.Privilege<3||!nowuser.isselect)//如果权限不够或者没有选择
         {
             throw Error();
         }
-        Book book=booklist.findval(nowuser.selectisdn)[0];
-        Book copy=book;
+        std::vector<Book>obj=booklist.findval(nowuser.selectisdn);
+        Book book,copy;
+        book =copy =obj[0];
         switch(s[1])
         {
             case 'I':
@@ -314,7 +314,7 @@ public:
                 else
                 {
                     std::string substring=s.substr(6);//获取ISBN
-                    if(substring.size()>20|| !is2(substring))
+                    if(substring.size()>20|| !is2(substring))//如果输入不合法
                     {
                         throw Error();
                     }
@@ -324,10 +324,13 @@ public:
                     {
                         throw Error();
                     }
-                    strcpy(book.ISBN,substring.c_str());
-                    stack.pop_back();
-                    strcpy(nowuser.selectisdn,book.ISBN);
-                    stack.push_back(nowuser);
+                    else
+                    {
+                        strcpy(book.ISBN, substring.c_str());
+                        strcpy(stack[stack.size()-1].selectisdn,substring.c_str());
+                        Delete(copy);
+                        bookinsert(book);
+                    }
                 }
                 break;
             }
@@ -356,6 +359,8 @@ public:
                         throw Error();
                     }
                     strcpy(book.Author,substring.c_str());
+                    Delete(copy);
+                    bookinsert(book);
                 }
                 break;
             }
@@ -381,6 +386,8 @@ public:
                         }
                     }
                     strcpy(book.Keyword,substring.c_str());
+                    Delete(copy);
+                    bookinsert(book);
                 }
                 break;
             }
@@ -392,11 +399,11 @@ public:
                     std::string substring=s.substr(7);//获取price
                     double price= stringToReal(substring);
                     book.Price=price;
+                    Delete(copy);
+                    bookinsert(book);
                 }
             }
         }
-        Delete(copy);
-        bookinsert(book);
     }
 
     void import(long long quantity, double totalcost)
