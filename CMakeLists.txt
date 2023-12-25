@@ -12,4 +12,6 @@ add_executable(code main.cpp
         user.h
         error.h
         financelog.h
+        log.h
+        stafflog.h
 )

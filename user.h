@@ -28,9 +28,9 @@ struct User
         return strcmp(lhs.UserID,rhs.UserID)==0;
     }
 
-    friend std::ostream &operator<<(std::ostream &os,const User& obj)
+    friend std::ostream& operator<<(std::ostream& os, const User& user)
     {
-        os<<obj.UserID<<'\t'<<obj.Password<<'\t'<<obj.Username<<'\t'<<obj.Privilege<<'\n';
+        os << user.UserID << '\t' << user.Password << '\t' << user.Username << '\t' << user.Privilege << '\n';
         return os;
     }
 };

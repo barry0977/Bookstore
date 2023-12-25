@@ -156,6 +156,12 @@ private:
             }
         }
 
+        friend std::ostream& operator<<(std::ostream& os, const element& obj)
+        {
+            os << obj.index << " " << obj.value << std::endl;
+            return os;
+        }
+
         element()=default;
 
         element(char ind[],VALUE num)
@@ -302,9 +308,14 @@ public:
 
     void Insert(char name[],VALUE number)
     {
+        //std::cout<<"insert begin \n";
+
         element obj(name,number);
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
+
+        //std::cout<<"进入insert之后读到的 "<<tmp.block1.minindex[0]<<"\n";
+
         if (tmp.block1.number == 0)//如果原本没有块
         {
             tmp.block1.number ++;
@@ -313,11 +324,21 @@ public:
             x.blocklist[0] = obj;
             x.booknum ++;
             int index = memoryriver.write(x);
+
+            //std::cout<<"第一次地址为 "<<index<<"\n";
+
             tmp.block1.minindex[0] = index;
             memoryriver.write_info(tmp);
+
+//            memoryriver.get_info(tmp);
+//            std::cout<<"原来没块 "<<tmp.block1.number<<" "<<tmp.block1.mininf[0].value<<'\n';
         }
         else//如果原本有块
         {
+//            block asd;
+//            memoryriver.read(asd,tmp.block1.minindex[0]);
+//            std::cout<<"原来有块 开始 "<<asd.booknum<<"\n";
+
             if (obj < tmp.block1.mininf[0])//如果obj是最小的，插入第一个块
             {
                 block btmp;
@@ -332,6 +353,9 @@ public:
                 }
                 btmp.blocklist[0] = obj;
                 btmp.booknum++;
+
+//                std::cout<<"操作后1 "<<btmp.booknum<<'\n';
+
                 memoryriver.update(btmp, tmp.block1.minindex[0]);
                 memoryriver.write_info(tmp);
                 if (btmp.booknum > Max_size)
@@ -393,13 +417,25 @@ public:
                 {
                     tmp.block1.mininf[place]=obj;
                 }
+
+//                std::cout<<"操作后2 "<<place<<' '<<btmp.booknum<<' '<<tmp.block1.minindex[place]<<'\n';
+
                 memoryriver.update(btmp, tmp.block1.minindex[place]);
                 memoryriver.write_info(tmp);
                 if (btmp.booknum > Max_size)//如果长度过长，则需要裂块
                 {
                     Divide(place);
                 }
+
+//                block sb;
+//                memoryriver.read(sb,tmp.block1.minindex[place]);
+//                std::cout<<"检验一下 "<<sb.booknum<<' '<<tmp.block1.minindex[place]<<'\n';
             }
+
+//            memoryriver.get_info(tmp);
+//            block b;
+//            memoryriver.read(b,tmp.block1.minindex[0]);
+//            std::cout<<"原来有块 结束 "<<b.booknum<<"\n";
         }
     }
 
@@ -700,9 +736,9 @@ struct mystr//用于将字符数组封装成结构体
         return *this;
     }
 
-    std::ostream & operator<<(std::ostream os)
+    friend std::ostream& operator<<(std::ostream& os, const mystr<len>& obj)
     {
-        os<<value;
+        os << obj.value;
         return os;
     }
 };

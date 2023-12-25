@@ -5,6 +5,8 @@
 #ifndef BOOKSTORE_BOOK_H
 #define BOOKSTORE_BOOK_H
 #include <iomanip>
+#include<iostream>
+#include<cstring>
 #include "blockchain.h"
 #include "error.h"
 #include "sentenceslice.h"
@@ -328,8 +330,6 @@ public:
                     {
                         strcpy(book.ISBN, substring.c_str());
                         strcpy(stack[stack.size()-1].selectisdn,substring.c_str());
-                        Delete(copy);
-                        bookinsert(book);
                     }
                 }
                 break;
@@ -359,8 +359,6 @@ public:
                         throw Error();
                     }
                     strcpy(book.Author,substring.c_str());
-                    Delete(copy);
-                    bookinsert(book);
                 }
                 break;
             }
@@ -386,8 +384,6 @@ public:
                         }
                     }
                     strcpy(book.Keyword,substring.c_str());
-                    Delete(copy);
-                    bookinsert(book);
                 }
                 break;
             }
@@ -404,6 +400,8 @@ public:
                 }
             }
         }
+        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
+        Delete(copy);
     }
 
     void import(long long quantity, double totalcost)
