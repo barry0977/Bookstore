@@ -77,11 +77,12 @@ public:
         if(tmp.len>0)//如果有空出来的区域，则写在那里
         {
             file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
-            int index=tmp.emptyinf[emptyblock.len-1];
+            int index=tmp.emptyinf[tmp.len-1];
             tmp.len--;
             file.seekp(index,std::ios::beg);
             file.write(reinterpret_cast<char *>(&t),sizeofT);
             file.close();
+            write_info(tmp);
             return index;
         }
         else
@@ -308,14 +309,13 @@ public:
 
     void Insert(char name[],VALUE number)
     {
-        //std::cout<<"insert begin \n";
+//        std::cout<<"insert begin \n";
 
         element obj(name,number);
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
 
-        //std::cout<<"进入insert之后读到的 "<<tmp.block1.minindex[0]<<"\n";
-
+//        std::cout<<"进入insert之后读到的 "<<tmp.block1.minindex[0]<<"\n";
         if (tmp.block1.number == 0)//如果原本没有块
         {
             tmp.block1.number ++;
@@ -325,7 +325,7 @@ public:
             x.booknum ++;
             int index = memoryriver.write(x);
 
-            //std::cout<<"第一次地址为 "<<index<<"\n";
+//            std::cout<<"第一次地址为 "<<index<<"\n";
 
             tmp.block1.minindex[0] = index;
             memoryriver.write_info(tmp);
@@ -429,13 +429,13 @@ public:
 
 //                block sb;
 //                memoryriver.read(sb,tmp.block1.minindex[place]);
-//                std::cout<<"检验一下 "<<sb.booknum<<' '<<tmp.block1.minindex[place]<<'\n';
+////                std::cout<<"检验一下 "<<sb.booknum<<' '<<tmp.block1.minindex[place]<<'\n';
             }
 
 //            memoryriver.get_info(tmp);
 //            block b;
 //            memoryriver.read(b,tmp.block1.minindex[0]);
-//            std::cout<<"原来有块 结束 "<<b.booknum<<"\n";
+////            std::cout<<"原来有块 结束 "<<b.booknum<<"\n";
         }
     }
 
@@ -608,10 +608,24 @@ public:
 
     void Delete(char name[],VALUE number)
     {
+//        std::cout<<"delete begin\n";
+
         element obj(name,number);
+
+//        std::cout<<"obj= "<<obj<<"\n";
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
-        if(tmp.block1.number>0&&(tmp.block1.mininf[0]<obj||tmp.block1.mininf[0]==obj))
+//        int x;
+//        if(tmp.block1.mininf[0]<obj||tmp.block1.mininf[0]==obj)
+//        {
+//            x=1;
+//        }
+//        else x=2;
+//        block sad;
+//        memoryriver.read(sad,tmp.block1.minindex[0]);
+//        std::cout<<"delete 中 "<<sad.booknum<<"\n"<<sad.blocklist[0]<<"\n"<<sad.blocklist[1]<<"\n";
+        //if(tmp.block1.number>0&&(tmp.block1.mininf[0]<obj||tmp.block1.mininf[0]==obj))
+        if(tmp.block1.number>0)
         {
             int min = 0, max = tmp.block1.number - 1, place;
             while (min <= max)//二分查找所在块,保存在place中
@@ -633,7 +647,7 @@ public:
             while(mini<=maxi)
             {
                 int middle=(mini+maxi)/2;
-                if(btmp.blocklist[middle]==obj)
+                if(strcmp(btmp.blocklist[middle].index,name)==0&&btmp.blocklist[middle].value==number)
                 {
                     order=middle;
                     break;
@@ -675,6 +689,8 @@ public:
                 }
             }
         }
+
+//        std::cout<<"delete 完 "<<sad.booknum<<"\n";
     }
 
     void display()

@@ -32,6 +32,17 @@ struct Book
         return strcmp(a.ISBN,b.ISBN)<0;
     }
 
+//    friend bool operator==(const Book& a,const Book& b)
+//    {
+//        if(strcmp(a.ISBN,b.ISBN)==0&& strcmp(a.BookName,b.BookName)&&strcmp(a.Author,b.Author)&&strcmp(a.Keyword,b.Keyword)&&a.Price==b.Price&&a.Count==b.Count)
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
     friend bool operator==(const Book& a,const Book& b)
     {
         return strcmp(a.ISBN,b.ISBN)==0;
@@ -67,8 +78,14 @@ public:
     {
         mystr<25> isbn(obj.ISBN);
         booklist.Insert(obj.ISBN,obj);
-        if(strlen(obj.BookName)!=0) booknamelist.Insert(obj.BookName,isbn);
-        if(strlen(obj.Author)!=0) authorlist.Insert(obj.Author,isbn);
+        if(strlen(obj.BookName)!=0)
+        {
+            booknamelist.Insert(obj.BookName,isbn);
+        }
+        if(strlen(obj.Author)!=0)
+        {
+            authorlist.Insert(obj.Author,isbn);
+        }
         if(strlen(obj.Keyword)!=0)
         {
             std::vector<string>keys= readkey(obj.Keyword);
@@ -322,8 +339,6 @@ public:
                     stack.pop_back();
                     strcpy(nowuser.selectisdn,book.ISBN);
                     stack.push_back(nowuser);
-                    bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
-                    Delete(copy);
                 }
                 break;
             }
@@ -340,8 +355,6 @@ public:
                     if(trim(book.BookName)!=trim(substring))
                     {
                         strcpy(book.BookName,substring.c_str());
-                        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
-                        Delete(copy);
                     }
                 }
                 break;
@@ -359,8 +372,6 @@ public:
                     if(trim(book.Author)!=trim(substring))
                     {
                         strcpy(book.Author,substring.c_str());
-                        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
-                        Delete(copy);
                     }
                 }
                 break;
@@ -388,8 +399,6 @@ public:
                     }
                     if(trim(book.Keyword)!=trim(substring)) {
                         strcpy(book.Keyword, substring.c_str());
-                        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
-                        Delete(copy);
                     }
                 }
                 break;
@@ -410,6 +419,8 @@ public:
                 }
             }
         }
+        Delete(copy);
+        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
     }
 
     void import(long long quantity, double totalcost)
