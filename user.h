@@ -9,6 +9,7 @@
 #include "book.h"
 #include <algorithm>
 #include "log.h"
+#include "stafflog.h"
 
 struct User
 {

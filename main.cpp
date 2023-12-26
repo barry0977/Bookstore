@@ -8,6 +8,7 @@
 #include "error.h"
 #include "financelog.h"
 #include "log.h"
+#include "stafflog.h"
 
 std::vector<User>stack;
 Bookinf bookinf;
