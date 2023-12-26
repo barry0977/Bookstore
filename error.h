@@ -7,9 +7,9 @@
 
 #include <string>
 #include <exception>
-class Error{
+class Error {
 public:
-    Error(){};
+    Error() {};
 
 private:
     std::string message;
@@ -17,6 +17,6 @@ private:
 
 void error()
 {
-    std::cout<<"Invalid\n";
+    std::cout << "Invalid\n";
 }
 #endif //CODE_ERROR_H

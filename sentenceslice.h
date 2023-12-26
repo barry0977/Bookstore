@@ -11,7 +11,7 @@
 std::vector<std::string> readtoken()//把读入的语句以空格为分隔符切片
 {
     std::string input;
-    std::getline(std::cin,input);//把一整行读入
+    std::getline(std::cin, input);//把一整行读入
     std::istringstream iss(input);
     std::vector<std::string>token;//储存以空格为分隔符的子串
     std::string substring;
@@ -38,7 +38,7 @@ std::vector<std::string> readkey(std::string input)//把读入的语句以|为�
     std::vector<std::string> subStrings;
     std::stringstream ss(input);
     std::string token;
-    while(std::getline(ss,token,'|'))
+    while (std::getline(ss, token, '|'))
     {
         subStrings.push_back(token);
     }
