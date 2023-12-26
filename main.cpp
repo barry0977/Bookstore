@@ -440,7 +440,7 @@ int main()
                         log.write(infor);
                     }
                 }
-                if (token[1] == "employee")
+                else if (token[1] == "employee")
                 {
                     if(stack.empty())
                     {
