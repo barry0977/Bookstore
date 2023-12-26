@@ -91,8 +91,9 @@ public:
             std::vector<string>keys= readkey(obj.Keyword);
             for(int i=0;i<keys.size();i++)
             {
-                char tmp[60];
+                char tmp[60]{};
                 strcpy(tmp,keys[i].c_str());
+                //std::cout<<tmp<<"\n";
                 keywordlist.Insert(tmp,isbn);
             }
         }
@@ -107,7 +108,7 @@ public:
         std::vector<string>keys= readkey(obj.Keyword);
         for(int i=0;i<keys.size();i++)
         {
-            char tmp[60];
+            char tmp[60]{};
             strcpy(tmp,keys[i].c_str());
             keywordlist.Delete(tmp,isbn);
         }
@@ -144,7 +145,7 @@ public:
                     {
                         throw Error();
                     }
-                    char ISBN[25];
+                    char ISBN[25]{};
                     strcpy(ISBN,substring.c_str());
                     list = booklist.findval(ISBN);
                     if(list.empty())
@@ -172,8 +173,8 @@ public:
                     {
                         throw Error();
                     }
-                    char ISBN[25];
-                    char BookName[65];
+                    char ISBN[25]{};
+                    char BookName[65]{};
                     strcpy(BookName,substring.c_str());
                     isbn = booknamelist.findval(BookName);
                     if(isbn.empty())
@@ -204,7 +205,7 @@ public:
                     {
                         throw Error();
                     }
-                    char Author[65];
+                    char Author[65]{};
                     strcpy(Author,substring.c_str());
                     isbn = authorlist.findval(Author);
                     if(isbn.empty())
@@ -230,7 +231,7 @@ public:
                 else
                 {
                     std::vector<mystr<25>>isbn;
-                    std::string substring=s.substr(10,s.size()-10);//获取keyword
+                    std::string substring=s.substr(10,s.size()-11);//获取keyword
                     if(substring.size()>60|| !is3(substring))
                     {
                         throw Error();
@@ -242,9 +243,9 @@ public:
                             throw Error();
                         }
                     }
-                    char Keyword[65];
+                    char Keyword[65]{};
                     strcpy(Keyword,substring.c_str());
-                    isbn = authorlist.findval(Keyword);
+                    isbn = keywordlist.findval(Keyword);
                     if(isbn.empty())
                     {
                         std::cout<<"\n";
@@ -329,7 +330,7 @@ public:
                     {
                         throw Error();
                     }
-                    char revise[25];
+                    char revise[25]{};
                     strcpy(revise,substring.c_str());
                     if(trim(book.ISBN)== trim(revise))
                     {
