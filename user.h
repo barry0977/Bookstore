@@ -149,7 +149,7 @@ public:
             }
             else
             {
-                std::cout<<user[0].Password<<' '<<password<<'\n';
+//                std::cout<<user[0].Password<<' '<<password<<'\n';
                 if(trim(user[0].Password)==trim(password))
                 {
                     stack.push_back(user[0]);

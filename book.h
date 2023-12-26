@@ -274,7 +274,7 @@ public:
             throw Error();
         }
         tmp[0].Count-=num;
-        std::cout<<num*tmp[0].Price<<"\n";
+        std::cout<<std::fixed<<std::setprecision(2)<<num*tmp[0].Price<<"\n";
         double profit=num*tmp[0].Price;
         financeinf.write(profit);
     }
@@ -447,7 +447,8 @@ public:
             Book book=booklist.findval(nowuser.selectisdn)[0];
             Book copy=book;
             book.Count+=quantity;
-            financeinf.write(totalcost);
+            double cost=-totalcost;
+            financeinf.write(cost);
             Delete(copy);
             bookinsert(book);
         }

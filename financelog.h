@@ -49,7 +49,7 @@ public:
 
     //读出首个块
     void get_info(info &tmp) {
-        file.open(file_name);
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         file.seekg(0);
         file.read(reinterpret_cast<char*>(&tmp), sizeof(info));
         file.close();
@@ -57,7 +57,7 @@ public:
 
     //将新的索引写入首个块中
     void write_info(info tmp) {
-        file.open(file_name);
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         file.seekp(0);
         file.write(reinterpret_cast<char*>(&tmp), sizeof(info));
         file.close();
@@ -67,28 +67,42 @@ public:
     //位置索引意味着当输入正确的位置索引index，在以下三个函数中都能顺利的找到目标对象进行操作
     //位置索引index可以取为对象写入的起始位置
     void write(T &t) {
-        file.open(file_name, std::ios::app);
+//        std::cout<<"数目为："<<t<<'\n';
+
+        file.open(file_name, std::ios::app|std::ios::binary);
         int index = file.tellp();
         file.write(reinterpret_cast<char *>(&t), sizeofT);
+        file.close();
+//        std::cout<<"写入位置为："<<index<<'\n';
         info tmp;
         get_info(tmp);
         tmp.count++;
         tmp.last=index;
-        file.close();
+        write_info(tmp);
+//        info xx;
+//        get_info(xx);
+//        std::cout<<"读出位置为："<<xx.last<<'\n';
     }
 
     void show()
     {
+        info tmp;
+        get_info(tmp);
+//        std::cout<<"oldplace："<<xx.last<<'\n';
+
+        if(stack.empty())
+        {
+            throw Error();
+        }
         User nowuser=stack.back();
         if(nowuser.Privilege<7)
         {
             throw Error();
         }
-        file.open(file_name,std::ios::in|std::ios::out);
-        info tmp;
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         T add=0;
         T minus=0;
-        get_info(tmp);
+//        std::cout<<"place: "<<tmp.last<<'\n';
         file.seekg(tmp.last,std::ios::beg);
         for(long long i=tmp.count;i>0;i--)
         {
@@ -100,27 +114,39 @@ public:
             }
             else
             {
-                minus+=t;
+                minus-=t;
             }
-            file.seekg(-sizeofT,std::ios::cur);
+            file.seekg(-2*sizeofT,std::ios::cur);//因为已经读了一次，要退回两格
+//            std::cout<<"计算得到："<<t<<'\n';
         }
         std::cout<<"+ "<<std::fixed<<std::setprecision(2)<<add<<" - "<<minus<<"\n";
+        file.close();
     }
 
     void show(long long num)
     {
+        info tmp;
+        get_info(tmp);
+        if(num>tmp.count)
+        {
+            throw Error();
+        }
+//        std::cout<<"oldplace："<<xx.last<<'\n';
+
+        if(stack.empty())
+        {
+            throw Error();
+        }
         User nowuser=stack.back();
         if(nowuser.Privilege<7)
         {
             throw Error();
         }
-        file.open(file_name,std::ios::in|std::ios::out);
-        info tmp;
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         T add=0;
         T minus=0;
-        get_info(tmp);
         file.seekg(tmp.last,std::ios::beg);
-        for(long long i=0;i<num;i--)
+        for(long long i=0;i<num;i++)
         {
             T t;
             file.read(reinterpret_cast<char *>(&t),sizeofT);
@@ -130,17 +156,18 @@ public:
             }
             else
             {
-                minus+=t;
+                minus-=t;
             }
-            file.seekg(-sizeofT,std::ios::cur);
+            file.seekg(-2*sizeofT,std::ios::cur);
         }
         std::cout<<"+ "<<std::fixed<<std::setprecision(2)<<add<<" - "<<minus<<"\n";
+        file.close();
     }
 
     //读出位置索引index对应的T对象的值并赋值给t，保证调用的index都是由write函数产生
     T read(const int index) {
         T t;
-        file.open(file_name,std::ios::in|std::ios::out);
+        file.open(file_name,std::ios::in|std::ios::out|std::ios::binary);
         file.seekg(index,std::ios::beg);
         file.read(reinterpret_cast<char *>(&t),sizeofT);
         file.close();
