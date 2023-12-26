@@ -8,6 +8,7 @@
 #include "error.h"
 #include "book.h"
 #include <algorithm>
+#include "log.h"
 
 struct User
 {
@@ -36,6 +37,8 @@ struct User
 };
 
 extern std::vector<User>stack;//登录栈，记录所有登录人员,当前操作人员为登录栈的最后一个
+extern Userlog userlog;
+extern Log log;
 
 class Userinf
 {
@@ -170,11 +173,6 @@ public:
         }
         else
         {
-            //User obj=stack.back();
-            //User copy=obj;
-            //obj.isselect=false;
-            //userlist.Delete(copy.UserID,copy);
-            //userlist.Insert(obj.UserID,obj);
             stack.pop_back();
         }
     }
@@ -238,6 +236,15 @@ public:
                     strcpy(obj.Password, newpasswd);
                     userlist.Delete(id, copy);
                     userlist.Insert(id, obj);
+                    if (nowuser.Privilege == 3)
+                    {
+                        loguser t;
+                        strcpy(t.id,nowuser.UserID);
+                        strcpy(t.act,"revise password");
+                        strcpy(t.obj,id);
+                        strcpy(t.obj2,newpasswd);
+                        userlog.write(t);
+                    }
                 }
             }
         }
@@ -273,6 +280,16 @@ public:
                 strcpy(obj.Username, name);
                 userlist.Insert(id, obj);
             }
+            if (nowuser.Privilege == 3)
+            {
+                loguser t;
+                strcpy(t.id,nowuser.UserID);
+                strcpy(t.act,"useradd");
+                strcpy(t.obj,id);
+                strcpy(t.obj2,passwd);
+                strcpy(t.obj3,name);
+                userlog.write(t);
+            }
         }
     }
 
@@ -291,6 +308,14 @@ public:
         nowuser.isselect = true;
         strcpy(nowuser.selectisdn, isbn);
         stack.push_back(nowuser);
+        if (nowuser.Privilege == 3)
+        {
+            loguser t;
+            strcpy(t.id,nowuser.UserID);
+            strcpy(t.act,"select");
+            strcpy(t.obj,isbn);
+            userlog.write(t);
+        }
     }
 };
 

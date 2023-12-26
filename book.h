@@ -18,6 +18,7 @@ extern Bookinf bookinf;
 extern Userinf userinf;
 extern Financelog<double> financeinf;
 extern Financeinf financeinf1;
+extern Log log;
 
 struct Book
 {
@@ -269,6 +270,10 @@ public:
         {
             throw Error();
         }
+        if(stack.empty())
+        {
+            throw Error();
+        }
         std::vector<Book> tmp = booklist.findval(isbn);
         if (tmp.empty())
         {
@@ -283,6 +288,12 @@ public:
         t.money = profit;
         t.number = num;
         financeinf1.write(t);
+        loginf x;
+        x.mode=2;
+        strcpy(x.isbn, isbn);
+        x.money = profit;
+        x.number = num;
+        log.write(x);
     }
 
     void select(char isbn[])
@@ -419,14 +430,34 @@ public:
                     if (book.Price != price)
                     {
                         book.Price = price;
-                        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
+                        bookinsert(book);
                         Delete(copy);
                     }
                 }
             }
         }
         Delete(copy);
-        bookinsert(book);//!!!这两个顺序弄反会出大问题，调了一整天！！！
+        bookinsert(book);
+        if (nowuser.Privilege == 3)
+        {
+            loguser t;
+            strcpy(t.id,nowuser.UserID);
+            strcpy(t.act,"modify");
+            strcpy(t.obj,nowuser.selectisdn);
+            strcpy(t.obj2,s.c_str());
+            userlog.write(t);
+        }
+        if(!stack.empty())
+        {
+            User sub = stack.back();
+            loginf infor;
+            infor.mode = 1;
+            strcpy(infor.id,sub.UserID);
+            strcpy(infor.act,"modify");
+            strcpy(infor.obj,nowuser.selectisdn);
+            strcpy(infor.obj2,s.c_str());
+            log.write(infor);
+        }
     }
 
     void import(long long quantity, double totalcost)
@@ -455,13 +486,34 @@ public:
             book.Count += quantity;
             double cost = -totalcost;
             financeinf.write(cost);
+
             logbook t;
             strcpy(t.isbn, nowuser.selectisdn);
             t.money = cost;
             t.number = quantity;
             financeinf1.write(t);
+
+            loginf x;
+            strcpy(x.isbn, nowuser.selectisdn);
+            x.money = cost;
+            x.number = quantity;
+            log.write(x);
+
             Delete(copy);
             bookinsert(book);
+
+            if (nowuser.Privilege == 3)
+            {
+                loguser t;
+                strcpy(t.id,nowuser.UserID);
+                strcpy(t.act,"import");
+                strcpy(t.obj,nowuser.selectisdn);
+                string a = realToString(totalcost);
+                string b = integerToString(quantity);
+                strcpy(t.obj2,b.c_str());
+                strcpy(t.obj3,a.c_str());
+                userlog.write(t);
+            }
         }
     }
 };

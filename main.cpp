@@ -7,23 +7,23 @@
 #include "sentenceslice.h"
 #include "error.h"
 #include "financelog.h"
+#include "log.h"
 
 std::vector<User>stack;
 Bookinf bookinf;
 Userinf userinf;
 Financelog<double> financeinf;//财务记录
 Financeinf financeinf1;//财务报表
+Userlog userlog;//员工工作情况
+Log log;//系统工作日志
 
 int main()
 {
     //    freopen("in.txt","r",stdin);
     //    freopen("out.txt","w",stdout);
     std::string input;
-    //    int line=0;
     while (std::getline(std::cin, input))
     {
-        //        line++;
-        //        std::cout<<line<<": ";
         try
         {
             std::vector<std::string> token = readtokens(input);
@@ -87,6 +87,18 @@ int main()
                 strcpy(pw, token[2].c_str());
                 strcpy(name, token[3].c_str());
                 userinf.regist(id, pw, name);
+                if(!stack.empty())
+                {
+                    User sub = stack.back();
+                    loginf infor;
+                    infor.mode = 1;
+                    strcpy(infor.id,sub.UserID);
+                    strcpy(infor.act,"register");
+                    strcpy(infor.obj,id);
+                    strcpy(infor.obj2,pw);
+                    strcpy(infor.obj3,name);
+                    log.write(infor);
+                }
             }
             else if (token[0] == "passwd")
             {
@@ -100,6 +112,17 @@ int main()
                     strcpy(id, token[1].c_str());
                     strcpy(npw, token[2].c_str());
                     userinf.passwd(id, npw);
+                    if(!stack.empty())
+                    {
+                        User sub = stack.back();
+                        loginf infor;
+                        infor.mode = 1;
+                        strcpy(infor.id,sub.UserID);
+                        strcpy(infor.act,"revise password");
+                        strcpy(infor.obj,id);
+                        strcpy(infor.obj2,npw);
+                        log.write(infor);
+                    }
                 }
                 else if (l == 4)
                 {
@@ -112,6 +135,21 @@ int main()
                     strcpy(cpw, token[2].c_str());
                     strcpy(npw, token[3].c_str());
                     userinf.passwd(id, npw, cpw);
+                    if(!stack.empty())
+                    {
+                        User sub = stack.back();
+                        loginf infor;
+                        infor.mode = 1;
+                        strcpy(infor.id,sub.UserID);
+                        strcpy(infor.act,"revise password");
+                        strcpy(infor.obj,id);
+                        strcpy(infor.obj2,npw);
+                        log.write(infor);
+                    }
+                }
+                else
+                {
+                    throw Error();
                 }
             }
             else if (token[0] == "useradd")
@@ -134,6 +172,18 @@ int main()
                 strcpy(pw, token[2].c_str());
                 strcpy(name, token[3].c_str());
                 userinf.useradd(id, pw, pri, name);
+                if(!stack.empty())
+                {
+                    User sub = stack.back();
+                    loginf infor;
+                    infor.mode = 1;
+                    strcpy(infor.id,sub.UserID);
+                    strcpy(infor.act,"add user");
+                    strcpy(infor.obj,id);
+                    strcpy(infor.obj2,pw);
+                    strcpy(infor.obj3,name);
+                    log.write(infor);
+                }
             }
             else if (token[0] == "delete")
             {
@@ -148,28 +198,76 @@ int main()
                 char id[35];
                 strcpy(id, token[1].c_str());
                 userinf.Delete(id);
+                if(!stack.empty())
+                {
+                    User sub = stack.back();
+                    loginf infor;
+                    infor.mode = 1;
+                    strcpy(infor.id,sub.UserID);
+                    strcpy(infor.act,"delete");
+                    strcpy(infor.obj,id);
+                    log.write(infor);
+                }
             }
             else if (token[0] == "show")
             {
                 if (l == 1)
                 {
                     bookinf.show();
+                    if(!stack.empty())
+                    {
+                        User sub = stack.back();
+                        loginf infor;
+                        infor.mode = 1;
+                        strcpy(infor.id,sub.UserID);
+                        strcpy(infor.act,"show");
+                        log.write(infor);
+                    }
                 }
                 else if (l == 2)
                 {
                     if (token[1] == "finance")
                     {
                         financeinf.show();
+                        if(!stack.empty())
+                        {
+                            User sub = stack.back();
+                            loginf infor;
+                            infor.mode = 1;
+                            strcpy(infor.id,sub.UserID);
+                            strcpy(infor.act,"show finance");
+                            log.write(infor);
+                        }
                     }
                     else
                     {
                         bookinf.show(token[1]);
+                        if(!stack.empty())
+                        {
+                            User sub = stack.back();
+                            loginf infor;
+                            infor.mode = 1;
+                            strcpy(infor.id,sub.UserID);
+                            strcpy(infor.act,"show");
+                            strcpy(infor.obj,token[1].c_str());
+                            log.write(infor);
+                        }
                     }
                 }
                 else if (l == 3 && token[1] == "finance")
                 {
                     long long count = stringToInteger(token[2]);
                     financeinf.show(count);
+                    if(!stack.empty())
+                    {
+                        User sub = stack.back();
+                        loginf infor;
+                        infor.mode = 1;
+                        strcpy(infor.id,sub.UserID);
+                        strcpy(infor.act,"show finance");
+                        strcpy(infor.obj,token[2].c_str());
+                        log.write(infor);
+                    }
                 }
                 else
                 {
@@ -190,6 +288,17 @@ int main()
                 char isbn[25];
                 strcpy(isbn, token[1].c_str());
                 bookinf.buy(isbn, quantity);
+                if(!stack.empty())
+                {
+                    User sub = stack.back();
+                    loginf infor;
+                    infor.mode = 1;
+                    strcpy(infor.id,sub.UserID);
+                    strcpy(infor.act,"buy");
+                    strcpy(infor.obj,isbn);
+                    strcpy(infor.obj2,token[2].c_str());
+                    log.write(infor);
+                }
             }
             else if (token[0] == "select")
             {
@@ -205,6 +314,16 @@ int main()
                 char isbn[25];
                 strcpy(isbn, token[1].c_str());
                 bookinf.select(isbn);
+                if(!stack.empty())
+                {
+                    User sub = stack.back();
+                    loginf infor;
+                    infor.mode = 1;
+                    strcpy(infor.id,sub.UserID);
+                    strcpy(infor.act,"select");
+                    strcpy(infor.obj,isbn);
+                    log.write(infor);
+                }
             }
             else if (token[0] == "modify")
             {
@@ -271,12 +390,34 @@ int main()
                 long long num = stringToInteger(token[1]);
                 double cost = stringToReal(token[2]);
                 bookinf.import(num, cost);
+                if(!stack.empty())
+                {
+                    User sub = stack.back();
+                    loginf infor;
+                    infor.mode = 1;
+                    strcpy(infor.id,sub.UserID);
+                    strcpy(infor.act,"import");
+                    strcpy(infor.obj,sub.selectisdn);
+                    strcpy(infor.obj2,token[1].c_str());
+                    strcpy(infor.obj3,token[2].c_str());
+                    log.write(infor);
+                }
             }
             else if (token[0] == "log")
             {
                 if (l != 1)
                 {
                     throw Error();
+                }
+                log.show();
+                if(!stack.empty())
+                {
+                    User sub = stack.back();
+                    loginf infor;
+                    infor.mode = 1;
+                    strcpy(infor.id,sub.UserID);
+                    strcpy(infor.act,"log");
+                    log.write(infor);
                 }
             }
             else if (token[0] == "report")
@@ -288,10 +429,41 @@ int main()
                 if (token[1] == "finance")
                 {
                     financeinf1.show();
+                    if(!stack.empty())
+                    {
+                        User sub = stack.back();
+                        loginf infor;
+                        infor.mode = 1;
+                        strcpy(infor.id,sub.UserID);
+                        strcpy(infor.act,"show finance");
+                        log.write(infor);
+                    }
                 }
                 if (token[1] == "employee")
                 {
-
+                    if(stack.empty())
+                    {
+                        throw Error();
+                    }
+                    User nowuser=stack.back();
+                    if(nowuser.Privilege<7)
+                    {
+                        throw Error();
+                    }
+                    userlog.show();
+                    if(!stack.empty())
+                    {
+                        User sub = stack.back();
+                        loginf infor;
+                        infor.mode = 1;
+                        strcpy(infor.id,sub.UserID);
+                        strcpy(infor.act,"show employee");
+                        log.write(infor);
+                    }
+                }
+                else
+                {
+                    throw Error();
                 }
             }
             else

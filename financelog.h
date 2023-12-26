@@ -269,11 +269,11 @@ public:
             std::cout<<"book: "<<t.isbn;
             if(t.money>0)
             {
-                std::cout<<"-"<<t.number<<" +"<<t.money<<"dollar\n";
+                std::cout<<" -"<<t.number<<" +"<<t.money<<"dollar\n";
             }
             else
             {
-                std::cout<<"+"<<t.number<<" -"<<t.money<<"dollar\n";
+                std::cout<<" +"<<t.number<<" -"<<-t.money<<"dollar\n";
             }
 //            file.seekg(-2*sizeofT,std::ios::cur);//因为已经读了一次，要退回两格
 //            std::cout<<"计算得到："<<t<<'\n';
