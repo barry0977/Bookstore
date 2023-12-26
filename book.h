@@ -444,10 +444,9 @@ public:
         }
         else
         {
-
             Book book=booklist.findval(nowuser.selectisdn)[0];
             Book copy=book;
-            book.Count-=quantity;
+            book.Count+=quantity;
             financeinf.write(totalcost);
             Delete(copy);
             bookinsert(book);
