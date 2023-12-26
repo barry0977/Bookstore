@@ -93,7 +93,6 @@ public:
             {
                 char tmp[60]{};
                 strcpy(tmp,keys[i].c_str());
-                //std::cout<<tmp<<"\n";
                 keywordlist.Insert(tmp,isbn);
             }
         }
