@@ -279,6 +279,10 @@ public:
         {
             throw Error();
         }
+        if(num>tmp[0].Count)
+        {
+            throw Error();
+        }
         std::cout << std::fixed << std::setprecision(2) << num * tmp[0].Price << "\n";
         double profit = num * tmp[0].Price;
 
@@ -357,6 +361,10 @@ public:
                     char revise[25]{};
                     strcpy(revise, substring.c_str());
                     if (trim(book.ISBN) == trim(revise))
+                    {
+                        throw Error();
+                    }
+                    if(!booklist.findval(revise).empty())
                     {
                         throw Error();
                     }
