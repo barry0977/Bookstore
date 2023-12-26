@@ -279,15 +279,23 @@ public:
         {
             throw Error();
         }
-        tmp[0].Count -= num;
         std::cout << std::fixed << std::setprecision(2) << num * tmp[0].Price << "\n";
         double profit = num * tmp[0].Price;
+
+        Book book = tmp[0];
+        Book copy = book;
+        book.Count -= num;
+        Delete(copy);
+        bookinsert(book);
+
         financeinf.write(profit);
+
         logbook t;
         strcpy(t.isbn, isbn);
         t.money = profit;
         t.number = num;
         financeinf1.write(t);
+
         loginf x;
         x.mode=2;
         strcpy(x.isbn, isbn);
