@@ -31,7 +31,14 @@ struct Book
 
     friend bool operator<(const Book& a, const Book& b)
     {
-        return strcmp(a.ISBN, b.ISBN) < 0;
+        if(strlen(a.ISBN)!=strlen(b.ISBN))
+        {
+            return strlen(a.ISBN)<strlen(b.ISBN);
+        }
+        else
+        {
+            return strcmp(a.ISBN, b.ISBN) < 0;
+        }
     }
 
     //    friend bool operator==(const Book& a,const Book& b)
