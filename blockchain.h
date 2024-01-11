@@ -11,7 +11,7 @@
 #include <cstring>
 #include <vector>
 
-const int Max_size = 3;//每个块中储存元素数量的最大值
+const int Max_size = 1050;//每个块中储存元素数量的最大值
 
 using std::string;
 using std::fstream;
