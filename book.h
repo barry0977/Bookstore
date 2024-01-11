@@ -330,7 +330,6 @@ public:
         nowuser.isselect = true;
         strcpy(nowuser.selectisdn, isbn);
         stack.push_back(nowuser);
-        //std::cout<<nowuser.selectisdn<<'\n';
         std::vector<Book>tmp = booklist.findval(isbn);
         if (tmp.empty())//如果没有符合条件的图书，则创建仅拥有ISBN信息的新图书
         {
