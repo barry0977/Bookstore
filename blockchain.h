@@ -11,7 +11,7 @@
 #include <cstring>
 #include <vector>
 
-const int Max_size = 1050;//每个块中储存元素数量的最大值
+const int Max_size = 2;//每个块中储存元素数量的最大值
 
 using std::string;
 using std::fstream;
@@ -28,7 +28,7 @@ struct blockinf//准备把首个块和储存空块信息的数组合并成一个
     blockinf() = default;
 };
 
-template<class S, class T>
+template<class S, class T>//S是首个块的结构体,T为后面的块的结构体
 class MemoryRiver {
 private:
     fstream file;
@@ -70,9 +70,6 @@ public:
         file.close();
     }
 
-    //在文件合适位置写入类对象t，并返回写入的位置索引index
-    //位置索引意味着当输入正确的位置索引index，在以下三个函数中都能顺利的找到目标对象进行操作
-    //位置索引index可以取为对象写入的起始位置
     int write(T& t) {
         blockinf<S> tmp;
         get_info(tmp);
@@ -87,7 +84,7 @@ public:
             write_info(tmp);
             return index;
         }
-        else
+        else//没有空块，就写在最后
         {
             file.open(file_name, std::ios::app | std::ios::binary);
             int index = file.tellp();
@@ -103,7 +100,7 @@ public:
     //用t的值更新位置索引index对应的对象，保证调用的index都是由write函数产生
     void update(T& t, const int index) {
         file.open(file_name, std::ios::in | std::ios::out | std::ios::binary);
-        file.seekg(index);
+        file.seekp(index);
         file.write(reinterpret_cast<char*>(&t), sizeofT);
         file.close();
     }
@@ -121,10 +118,10 @@ template<int len, class VALUE>//len表示index字符数组的长度，VALUE表�
 class blockchain
 {
 private:
-    struct element
+    struct element//储存的最小单位，包含索引和值
     {
         char index[len]{ 0 };//不能用string，否则会出现free(),invalid point
-        VALUE value;
+        VALUE value=0;
 
         friend bool operator<(const element& lhs, const element& rhs)
         {
