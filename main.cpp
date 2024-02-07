@@ -333,7 +333,7 @@ int main()
             }
             else if (token[0] == "modify")
             {
-                  bookinf.modify()
+                  bookinf.modify();
 //                bool is[5]{ false };
 //                for (int i = 1; i < l; i++)
 //                {

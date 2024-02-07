@@ -18,8 +18,8 @@ using std::fstream;
 using std::ifstream;
 using std::ofstream;
 
-template<class S>
-struct blockinf//准备把首个块和储存空块信息的数组合并成一个结构体
+template<class S>//S为首个块的结构体
+struct blockinf//把首个块和储存空块信息的数组合并成一个结构体
 {
     S block1;
     int emptyinf[400]{ 0 };//记录空块地址
@@ -46,7 +46,7 @@ public:
         file.open(file_name);
         if (!file.good())
         {
-            file.open(file_name, std::ios::out | std::ios::binary);
+            file.open(file_name, std::ios::out);
             file.close();
             file.open(file_name);
             file.write(reinterpret_cast<char*>(&emptyblock), sizeof(blockinf<S>));
@@ -76,7 +76,7 @@ public:
         if (tmp.len > 0)//如果有空出来的区域，则写在那里
         {
             file.open(file_name, std::ios::in | std::ios::out | std::ios::binary);
-            int index = tmp.emptyinf[tmp.len - 1];
+            long long index = tmp.emptyinf[tmp.len - 1];
             tmp.len--;
             file.seekp(index, std::ios::beg);
             file.write(reinterpret_cast<char*>(&t), sizeofT);
@@ -88,9 +88,6 @@ public:
         {
             file.open(file_name, std::ios::app | std::ios::binary);
             int index = file.tellp();
-
-//            std::cout<<"打开时地址："<<index<<"\n";
-
             file.write(reinterpret_cast<char*>(&t), sizeofT);
             file.close();
             return index;
@@ -100,7 +97,7 @@ public:
     //用t的值更新位置索引index对应的对象，保证调用的index都是由write函数产生
     void update(T& t, const int index) {
         file.open(file_name, std::ios::in | std::ios::out | std::ios::binary);
-        file.seekp(index);
+        file.seekp(index,std::ios::beg);
         file.write(reinterpret_cast<char*>(&t), sizeofT);
         file.close();
     }
@@ -108,7 +105,7 @@ public:
     //读出位置索引index对应的T对象的值并赋值给t，保证调用的index都是由write函数产生
     void read(T& t, const int index) {
         file.open(file_name, std::ios::in | std::ios::out | std::ios::binary);
-        file.seekg(index);
+        file.seekg(index,std::ios::beg);
         file.read(reinterpret_cast<char*>(&t), sizeofT);
         file.close();
     }
@@ -121,7 +118,7 @@ private:
     struct element//储存的最小单位，包含索引和值
     {
         char index[len]{ 0 };//不能用string，否则会出现free(),invalid point
-        VALUE value=0;
+        VALUE value;
 
         friend bool operator<(const element& lhs, const element& rhs)
         {
@@ -202,7 +199,7 @@ private:
     {
         int number = 0;//记录块的数量
         element mininf[400];//每个块的首个元素（最小元素）
-        int minindex[400]{ 0 };//每个块的首地址
+        long minindex[400]{ 0 };//每个块的首地址
 
         firstblock() = default;
     };
@@ -217,45 +214,20 @@ public:
         memoryriver.initialise(filename);
     }
 
-    bool isfirst()//判断是否是第一次操作文件
-    {
-        bool is;
-        blockinf<firstblock> tmp;
-        memoryriver.get_info(tmp);
-        if (tmp.block1.number == 0)
-        {
-            is = true;
-        }
-        else
-        {
-            is = false;
-        }
-        return is;
-    }
-
-    void initial(string filename)
-    {
-        memoryriver.initialise(filename);
-    }
+//    void initial(string filename)
+//    {
+//        memoryriver.initialise(filename);
+//    }
 
     //裂块操作
     void Divide(int place)//place表示第几个块
     {
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
-        if (place == tmp.block1.number - 1)//如果是最后一个块
+        block btmp;
+        memoryriver.read(btmp, tmp.block1.minindex[place]);//把第place个块的信息读出来
+        if (place == tmp.block1.number - 1)//如果是最后一个块  好像发现问题，一开始先把书的数目增加了
         {
-            tmp.block1.number++;
-            block btmp;
-            memoryriver.read(btmp, tmp.block1.minindex[place]);
-
-//            std::cout<<"裂块前:";
-//            for(int i=0;i<btmp.booknum;i++)
-//            {
-//                std::cout<<btmp.blocklist[i]<<" ";
-//            }
-//            std::cout<<std::endl;
-
             tmp.block1.mininf[place + 1] = btmp.blocklist[(0 + btmp.booknum) / 2];
             block obj1, obj2;
             for (int i = 0; i < (0 + btmp.booknum) / 2; i++)
@@ -268,35 +240,15 @@ public:
                 obj2.blocklist[j - (0 + btmp.booknum) / 2] = btmp.blocklist[j];
                 obj2.booknum++;
             }
-            int newindex = memoryriver.write(obj2);
-
-//            std::cout<<"前："<<tmp.block1.minindex[place]<<" 后："<<newindex<<"\n";
-
+            long newindex = memoryriver.write(obj2);
             tmp.block1.minindex[place + 1] = newindex;
+            tmp.block1.number++;
             memoryriver.update(obj1, tmp.block1.minindex[place]);
             memoryriver.write_info(tmp);
-
-//            block x1,x2;
-//            memoryriver.read(x1,tmp.block1.minindex[place]);
-//            memoryriver.read(x2,tmp.block1.minindex[place+1]);
-//            std::cout<<"裂块后：";
-//            for(int i=0;i<x1.booknum;i++)
-//            {
-//                std::cout<<x1.blocklist[i]<<" ";
-//            }
-//            std::cout<<std::endl;
-//            for(int i=0;i<x2.booknum;i++)
-//            {
-//                std::cout<<x2.blocklist[i]<<" ";
-//            }
-//            std::cout<<std::endl;
-
         }
-        else
-        {
-            tmp.block1.number++;
+        else {
             element teminf1 = tmp.block1.mininf[place + 1];
-            int temindex1 = tmp.block1.minindex[place + 1];
+            long temindex1 = tmp.block1.minindex[place + 1];
             for (int i = place + 1; i < tmp.block1.number; i++)//要裂的块后所有索引往后移一格
             {
                 element teminf2 = tmp.block1.mininf[i + 1];
@@ -306,28 +258,22 @@ public:
                 teminf1 = teminf2;
                 temindex1 = temindex2;
             }
-            block btmp;
-            memoryriver.read(btmp, tmp.block1.minindex[place]);
             tmp.block1.mininf[place + 1] = btmp.blocklist[(0 + btmp.booknum) / 2];
             block obj1, obj2;
-            for (int i = 0; i < (0 + btmp.booknum) / 2; i++)
-            {
+            for (int i = 0; i < (0 + btmp.booknum) / 2; i++) {
                 obj1.blocklist[i] = btmp.blocklist[i];
                 obj1.booknum++;
             }
-            for (int j = (0 + btmp.booknum) / 2; j < btmp.booknum; j++)
-            {
+            for (int j = (0 + btmp.booknum) / 2; j < btmp.booknum; j++) {
                 obj2.blocklist[j - (0 + btmp.booknum) / 2] = btmp.blocklist[j];
                 obj2.booknum++;
             }
-            int newindex = memoryriver.write(obj2);
+            long newindex = memoryriver.write(obj2);
             tmp.block1.minindex[place + 1] = newindex;
+            tmp.block1.number++;
             memoryriver.update(obj1, tmp.block1.minindex[place]);
             memoryriver.write_info(tmp);
         }
-
-
-
     }
 
     //删块操作
@@ -357,19 +303,9 @@ public:
 
     void Insert(char name[], VALUE number)
     {
-//        std::cout<<"进入insert\n";
-
-        element obj(name, number);
+        element obj(name, number);//2.8 看到这里
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
-
-//        for(int i=0;i<tmp.block1.number;i++)
-//        {
-//            block fuck;
-//            memoryriver.read(fuck,tmp.block1.minindex[i]);
-//            std::cout<<"第"<<i<<"块中有"<<fuck.booknum<<"个\n";
-//        }
-
         if (tmp.block1.number == 0)//如果原本没有块
         {
             tmp.block1.number++;

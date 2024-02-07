@@ -371,6 +371,45 @@ public:
                 {
                     throw Error();
                 }
+                std::string substring = s[i].substr(6);//获取ISBN
+                if (substring.size() > 20 || !is2(substring))//如果输入不合法
+                {
+                    throw Error();
+                }
+                char revise[25]{};
+                strcpy(revise, substring.c_str());
+                if (trim(book.ISBN) == trim(revise))//不允许将 ISBN 改为原有的 ISBN
+                {
+                    throw Error();
+                }
+                if(!booklist.findval(revise).empty())//如果要修改的isbn已经存在
+                {
+                    throw Error();
+                }
+                strcpy(book.ISBN, revise);
+                stack.pop_back();
+                strcpy(nowuser.selectisdn, revise);
+                stack.push_back(nowuser);
+            }
+            if(s[i][1]=='n')
+            {
+                if(is[1])
+                {
+                    throw Error();
+                }
+                is[1]=true;
+                if(s[i].size()==)
+            }
+            if(s[i][1]=='a')
+            {
+
+            }
+            if(s[i][1]=='k')
+            {
+
+            }
+            if(s[i][1]=='p')
+            {
 
             }
         }
