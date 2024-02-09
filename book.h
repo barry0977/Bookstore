@@ -322,11 +322,11 @@ public:
             throw Error();
         }
         User nowuser = stack.back();
-        stack.pop_back();
         if (nowuser.Privilege < 3)
         {
             throw Error();
         }
+        stack.pop_back();
         nowuser.isselect = true;
         strcpy(nowuser.selectisdn, isbn);
         stack.push_back(nowuser);
@@ -340,7 +340,7 @@ public:
     }
 
 
-    void modify(std::vector<string> s)
+    void Modify(std::vector<string> s)
     {
         if (stack.empty())//如果登录栈为空
         {
@@ -484,148 +484,148 @@ public:
         Delete(copy);
         bookinsert(book);
     }
-//    void modify(string& s)
-//    {
-//        if (stack.empty())//如果登录栈为空
-//        {
-//            throw Error();
-//        }
-//        User nowuser = stack.back();
-//        if (nowuser.Privilege < 3 || !nowuser.isselect)//如果权限不够或者没有选择
-//        {
-//            throw Error();
-//        }
-//        Book book = booklist.findval(nowuser.selectisdn)[0];//出问题
-//        Book copy = book;
-//        switch (s[1])
-//        {
-//            case 'I':
-//            {
-//                if (s.size() == 6) { throw Error(); }
-//                else
-//                {
-//                    std::string substring = s.substr(6);//获取ISBN
-//                    if (substring.size() > 20 || !is2(substring))//如果输入不合法
-//                    {
-//                        throw Error();
-//                    }
-//                    char revise[25]{};
-//                    strcpy(revise, substring.c_str());
-//                    if (trim(book.ISBN) == trim(revise))
-//                    {
-//                        throw Error();
-//                    }
-//                    if(!booklist.findval(revise).empty())
-//                    {
-//                        throw Error();
-//                    }
-//                    strcpy(book.ISBN, substring.c_str());
-//                    stack.pop_back();
-//                    strcpy(nowuser.selectisdn, book.ISBN);
-//                    stack.push_back(nowuser);
-//                }
-//                break;
-//            }
-//            case 'n':
-//            {
-//                if (s.size() == 6) { throw Error(); }
-//                else
-//                {
-//                    std::string substring = s.substr(7, s.size() - 8);//获取书名
-//                    if (substring.size() > 60 || !is3(substring))
-//                    {
-//                        throw Error();
-//                    }
-//                    if (trim(book.BookName) != trim(substring))
-//                    {
-//                        strcpy(book.BookName, substring.c_str());
-//                    }
-//                }
-//                break;
-//            }
-//            case 'a':
-//            {
-//                if (s.size() == 8) { throw Error(); }
-//                else
-//                {
-//                    std::string substring = s.substr(9, s.size() - 10);//获取author
-//                    if (substring.size() > 60 || !is3(substring))
-//                    {
-//                        throw Error();
-//                    }
-//                    if (trim(book.Author) != trim(substring))
-//                    {
-//                        strcpy(book.Author, substring.c_str());
-//                    }
-//                }
-//                break;
-//            }
-//            case 'k':
-//            {
-//                if (s.size() == 9) { throw Error(); }
-//                else
-//                {
-//                    std::string substring = s.substr(10, s.size() - 11);//获取keyword
-//                    if (substring.size() > 60 || !is3(substring))
-//                    {
-//                        throw Error();
-//                    }
-//                    std::vector<string>key = readkey(substring);
-//                    for (int i = 0; i < key.size(); i++)
-//                    {
-//                        for (int j = 0; j < key.size(); j++)
-//                        {
-//                            if (i != j && key[i] == key[j])//如果包含重复信息段
-//                            {
-//                                throw Error();
-//                            }
-//                        }
-//                    }
-//                    if (trim(book.Keyword) != trim(substring)) {
-//                        strcpy(book.Keyword, substring.c_str());
-//                    }
-//                }
-//                break;
-//            }
-//            case 'p':
-//            {
-//                if (s.size() == 7) { throw Error(); }
-//                else
-//                {
-//                    std::string substring = s.substr(7);//获取price
-//                    double price = stringToReal(substring);
-//                    if (book.Price != price)
-//                    {
-//                        book.Price = price;
-//                        bookinsert(book);
-//                        Delete(copy);
-//                    }
-//                }
-//            }
-//        }
-//        Delete(copy);
-//        bookinsert(book);
-//        if (nowuser.Privilege == 3)
-//        {
-//            loguser t;
-//            strcpy(t.id,nowuser.UserID);
-//            strcpy(t.act,"modify");
-//            strcpy(t.obj,nowuser.selectisdn);
-//            strcpy(t.obj2,s.c_str());
-//            userlog.write(t);
-//        }
-//        if(!stack.empty())
-//        {
-//            User sub = stack.back();
-//            loginf infor;
-//            infor.mode = 1;
-//            strcpy(infor.id,sub.UserID);
-//            strcpy(infor.act,"modify");
-//            strcpy(infor.obj,nowuser.selectisdn);
-//            strcpy(infor.obj2,s.c_str());
-//            log.write(infor);
-//        }
-//    }
+    void modify(string& s)
+    {
+        if (stack.empty())//如果登录栈为空
+        {
+            throw Error();
+        }
+        User nowuser = stack.back();
+        if (nowuser.Privilege < 3 || !nowuser.isselect)//如果权限不够或者没有选择
+        {
+            throw Error();
+        }
+        Book book = booklist.findval(nowuser.selectisdn)[0];//出问题
+        Book copy = book;
+        switch (s[1])
+        {
+            case 'I':
+            {
+                if (s.size() == 6) { throw Error(); }
+                else
+                {
+                    std::string substring = s.substr(6);//获取ISBN
+                    if (substring.size() > 20 || !is2(substring))//如果输入不合法
+                    {
+                        throw Error();
+                    }
+                    char revise[25]{};
+                    strcpy(revise, substring.c_str());
+                    if (trim(book.ISBN) == trim(revise))
+                    {
+                        throw Error();
+                    }
+                    if(!booklist.findval(revise).empty())
+                    {
+                        throw Error();
+                    }
+                    strcpy(book.ISBN, substring.c_str());
+                    stack.pop_back();
+                    strcpy(nowuser.selectisdn, book.ISBN);
+                    stack.push_back(nowuser);
+                }
+                break;
+            }
+            case 'n':
+            {
+                if (s.size() == 6) { throw Error(); }
+                else
+                {
+                    std::string substring = s.substr(7, s.size() - 8);//获取书名
+                    if (substring.size() > 60 || !is3(substring))
+                    {
+                        throw Error();
+                    }
+                    if (trim(book.BookName) != trim(substring))
+                    {
+                        strcpy(book.BookName, substring.c_str());
+                    }
+                }
+                break;
+            }
+            case 'a':
+            {
+                if (s.size() == 8) { throw Error(); }
+                else
+                {
+                    std::string substring = s.substr(9, s.size() - 10);//获取author
+                    if (substring.size() > 60 || !is3(substring))
+                    {
+                        throw Error();
+                    }
+                    if (trim(book.Author) != trim(substring))
+                    {
+                        strcpy(book.Author, substring.c_str());
+                    }
+                }
+                break;
+            }
+            case 'k':
+            {
+                if (s.size() == 9) { throw Error(); }
+                else
+                {
+                    std::string substring = s.substr(10, s.size() - 11);//获取keyword
+                    if (substring.size() > 60 || !is3(substring))
+                    {
+                        throw Error();
+                    }
+                    std::vector<string>key = readkey(substring);
+                    for (int i = 0; i < key.size(); i++)
+                    {
+                        for (int j = 0; j < key.size(); j++)
+                        {
+                            if (i != j && key[i] == key[j])//如果包含重复信息段
+                            {
+                                throw Error();
+                            }
+                        }
+                    }
+                    if (trim(book.Keyword) != trim(substring)) {
+                        strcpy(book.Keyword, substring.c_str());
+                    }
+                }
+                break;
+            }
+            case 'p':
+            {
+                if (s.size() == 7) { throw Error(); }
+                else
+                {
+                    std::string substring = s.substr(7);//获取price
+                    double price = stringToReal(substring);
+                    if (book.Price != price)
+                    {
+                        book.Price = price;
+                        bookinsert(book);
+                        Delete(copy);
+                    }
+                }
+            }
+        }
+        Delete(copy);
+        bookinsert(book);
+        if (nowuser.Privilege == 3)
+        {
+            loguser t;
+            strcpy(t.id,nowuser.UserID);
+            strcpy(t.act,"modify");
+            strcpy(t.obj,nowuser.selectisdn);
+            strcpy(t.obj2,s.c_str());
+            userlog.write(t);
+        }
+        if(!stack.empty())
+        {
+            User sub = stack.back();
+            loginf infor;
+            infor.mode = 1;
+            strcpy(infor.id,sub.UserID);
+            strcpy(infor.act,"modify");
+            strcpy(infor.obj,nowuser.selectisdn);
+            strcpy(infor.obj2,s.c_str());
+            log.write(infor);
+        }
+    }
 
     void import(long long quantity, double totalcost)
     {

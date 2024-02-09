@@ -134,10 +134,10 @@ public:
         }
         if (stack.empty())//如果登录栈为空
         {
-            //ootstd::cout<<user[0].Password<<' '<<password<<'\n';
             if (trim(user[0].Password) == trim(password))
             {
                 stack.push_back(user[0]);
+//                std::cout<<"登录成功\n";
             }
             else//如果密码错误则操作失败
             {
@@ -153,7 +153,6 @@ public:
             }
             else
             {
-                //                std::cout<<user[0].Password<<' '<<password<<'\n';
                 if (trim(user[0].Password) == trim(password))
                 {
                     stack.push_back(user[0]);

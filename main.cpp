@@ -20,11 +20,13 @@ Log log;//系统工作日志
 
 int main()
 {
-//    freopen("in.txt","r",stdin);
-//    freopen("out.txt","w",stdout);
+    freopen("in.txt","r",stdin);
+    freopen("out.txt","w",stdout);
     std::string input;
+//    int i =0;
     while (std::getline(std::cin, input))
     {
+//        i++;
         try
         {
             std::vector<std::string> token = readtokens(input);
@@ -32,8 +34,10 @@ int main()
             for(int i=0;i<l;i++)
             {
                 token[i]=trim(token[i]);
-//                std::cout<<token[i]<<" ";
             }
+
+//            std::cout<<i<<":"<<stack.size()<<'\n';
+
             if (token[0] == "exit" || token[0] == "quit")
             {
                 if (l > 1)
@@ -333,7 +337,7 @@ int main()
             }
             else if (token[0] == "modify")
             {
-              bookinf.modify(token);
+              bookinf.Modify(token);
 //                bool is[5]{ false };
 //                for (int i = 1; i < l; i++)
 //                {
