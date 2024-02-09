@@ -26,7 +26,7 @@ int main()
     while (/*std::getline(std::cin, input)*/true)
     {
         if (std::cin.peek() == '\n') {
-            continue;
+            break;
         }
         else
         {
