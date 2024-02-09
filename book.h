@@ -386,10 +386,22 @@ public:
                 {
                     throw Error();
                 }
+
+                char origin[25]{};
+                strcpy(origin,book.ISBN);
+
                 strcpy(book.ISBN, revise);
                 stack.pop_back();
                 strcpy(nowuser.selectisdn, revise);
                 stack.push_back(nowuser);
+
+                for(int i =0;i<stack.size()-1;i++)
+                {
+                    if(strcmp(stack[i].selectisdn,origin)==0)
+                    {
+                        strcpy(stack[i].selectisdn,revise);
+                    }
+                }
             }
             if(s[i][1]=='n')
             {

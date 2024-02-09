@@ -20,13 +20,14 @@ Log log;//系统工作日志
 
 int main()
 {
-//    freopen("in.txt","r",stdin);
-//    freopen("out.txt","w",stdout);
+    freopen("in.txt","r",stdin);
+    freopen("out.txt","w",stdout);
     std::string input;
 //    int i =0;
     while (std::getline(std::cin, input))
     {
 //        i++;
+//        std::cout<<"第"<<i<<"行：\n";
         try
         {
             std::vector<std::string> token = readtokens(input);
@@ -476,7 +477,10 @@ int main()
             }
             else
             {
-                throw Error();
+                if(!token.empty())
+                {
+                    throw Error();
+                }
             }
         }
         catch (Error)
