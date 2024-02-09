@@ -24,17 +24,15 @@ int main()
 //    freopen("in.txt","r",stdin);
 //    freopen("out.txt","w",stdout);
     std::string input;
-    while (std::cin.peek() != EOF)
+    while (std::getline(std::cin, input))
     {
-        std::getline(std::cin, input);
-        // 对输入进行处理
-
-        // 重置输入流状态，清除换行符
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         try
         {
             std::vector<std::string> token = readtokens(input);
+            if(token.empty())
+            {
+                break;
+            }
             int l = token.size();
             for(int i=0;i<l;i++)
             {
