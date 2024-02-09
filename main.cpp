@@ -20,8 +20,8 @@ Log log;//系统工作日志
 
 int main()
 {
-    freopen("in.txt","r",stdin);
-    freopen("out.txt","w",stdout);
+//    freopen("in.txt","r",stdin);
+//    freopen("out.txt","w",stdout);
     std::string input;
 //    int i =0;
     while (std::getline(std::cin, input))
