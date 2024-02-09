@@ -9,6 +9,7 @@
 #include "financelog.h"
 #include "log.h"
 #include "stafflog.h"
+#include <limits>
 
 std::vector<User>stack;
 Bookinf bookinf;
@@ -23,15 +24,14 @@ int main()
 //    freopen("in.txt","r",stdin);
 //    freopen("out.txt","w",stdout);
     std::string input;
-    while (/*std::getline(std::cin, input)*/true)
+    while (std::cin.peek() != EOF)
     {
-        if (std::cin.peek() == '\n') {
-            break;
-        }
-        else
-        {
-            std::getline(std::cin, input);
-        }
+        std::getline(std::cin, input);
+        // 对输入进行处理
+
+        // 重置输入流状态，清除换行符
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         try
         {
             std::vector<std::string> token = readtokens(input);
