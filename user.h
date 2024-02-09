@@ -49,8 +49,9 @@ public:
     Userinf()
     {
         userlist.initial("userinfo");
-        if (userlist.isfirst)//程序首次运行时自主执行所需的初始化操作；创建帐户名为 root，密码为 sjtu，权限为 {7} 的超级管理员帐户。
+        if (userlist.findval("root").empty())//程序首次运行时自主执行所需的初始化操作；创建帐户名为 root，密码为 sjtu，权限为 {7} 的超级管理员帐户。
         {
+//            std::cout<<"刷新\n";
             User boss;
             strcpy(boss.UserID, "root");
             boss.Privilege = 7;
@@ -137,7 +138,6 @@ public:
             if (trim(user[0].Password) == trim(password))
             {
                 stack.push_back(user[0]);
-//                std::cout<<"登录成功\n";
             }
             else//如果密码错误则操作失败
             {
