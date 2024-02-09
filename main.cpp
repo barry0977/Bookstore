@@ -25,9 +25,12 @@ int main()
     std::string input;
     while (/*std::getline(std::cin, input)*/true)
     {
-        if (std::cin.peek() != '\n') {
+        if (std::cin.peek() == '\n') {
+            continue;
+        }
+        else
+        {
             std::getline(std::cin, input);
-            // 对输入进行处理
         }
         try
         {
