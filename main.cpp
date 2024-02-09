@@ -23,11 +23,12 @@ int main()
 //    freopen("in.txt","r",stdin);
 //    freopen("out.txt","w",stdout);
     std::string input;
-//    int i =0;
-    while (std::getline(std::cin, input))
+    while (/*std::getline(std::cin, input)*/true)
     {
-//        i++;
-//        std::cout<<"第"<<i<<"行：\n";
+        if (std::cin.peek() != '\n') {
+            std::getline(std::cin, input);
+            // 对输入进行处理
+        }
         try
         {
             std::vector<std::string> token = readtokens(input);
