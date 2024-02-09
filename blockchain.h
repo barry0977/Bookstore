@@ -11,7 +11,7 @@
 #include <cstring>
 #include <vector>
 
-const int Max_size = 2;//每个块中储存元素数量的最大值
+const int Max_size = 350;//每个块中储存元素数量的最大值
 
 using std::string;
 using std::fstream;
@@ -207,6 +207,7 @@ private:
     MemoryRiver<firstblock, block> memoryriver;
 
 public:
+    bool isfirst = true;
     blockchain() = default;
 
     blockchain(string filename)
@@ -214,19 +215,20 @@ public:
         memoryriver.initialise(filename);
     }
 
-//    void initial(string filename)
-//    {
-//        memoryriver.initialise(filename);
-//    }
+    void initial(string filename)
+    {
+        memoryriver.initialise(filename);
+    }
 
     //裂块操作
     void Divide(int place)//place表示第几个块
     {
+        isfirst=false;
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
         block btmp;
         memoryriver.read(btmp, tmp.block1.minindex[place]);//把第place个块的信息读出来
-        if (place == tmp.block1.number - 1)//如果是最后一个块  好像发现问题，一开始先把书的数目增加了
+        if (place == tmp.block1.number - 1)//如果是最后一个块
         {
             tmp.block1.mininf[place + 1] = btmp.blocklist[(0 + btmp.booknum) / 2];
             block obj1, obj2;
@@ -241,6 +243,11 @@ public:
                 obj2.booknum++;
             }
             long newindex = memoryriver.write(obj2);
+            if(tmp.len>0)//如果有空余位置，则优先填入该位置并更新
+            {
+                tmp.len--;
+                tmp.emptyinf[tmp.len-1]=0;
+            }
             tmp.block1.minindex[place + 1] = newindex;
             tmp.block1.number++;
             memoryriver.update(obj1, tmp.block1.minindex[place]);
@@ -269,6 +276,11 @@ public:
                 obj2.booknum++;
             }
             long newindex = memoryriver.write(obj2);
+            if(tmp.len>0)//如果有空余位置，则优先填入该位置并更新
+            {
+                tmp.len--;
+                tmp.emptyinf[tmp.len-1]=0;
+            }
             tmp.block1.minindex[place + 1] = newindex;
             tmp.block1.number++;
             memoryriver.update(obj1, tmp.block1.minindex[place]);
@@ -303,6 +315,7 @@ public:
 
     void Insert(char name[], VALUE number)
     {
+        isfirst=false;
         element obj(name, number);//2.8 看到这里
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
@@ -314,6 +327,11 @@ public:
             x.blocklist[0] = obj;
             x.booknum++;
             int index = memoryriver.write(x);
+            if(tmp.len>0)//如果有空余位置，则优先填入该位置并更新
+            {
+                tmp.len--;
+                tmp.emptyinf[tmp.len-1]=0;
+            }
             tmp.block1.minindex[0] = index;
             memoryriver.write_info(tmp);
         }
@@ -333,9 +351,6 @@ public:
                 }
                 btmp.blocklist[0] = obj;
                 btmp.booknum++;
-
-                //                std::cout<<"操作后1 "<<btmp.booknum<<'\n';
-
                 memoryriver.update(btmp, tmp.block1.minindex[0]);
                 memoryriver.write_info(tmp);
                 if (btmp.booknum > Max_size)
@@ -409,6 +424,7 @@ public:
 
     void Find(char obj[])
     {
+        isfirst=false;
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
         if (tmp.block1.number == 0)//如果没有块，直接返回null
@@ -501,6 +517,7 @@ public:
 
     std::vector<VALUE> findval(char obj[])
     {
+        isfirst = false;
         std::vector<VALUE>list;
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
@@ -576,6 +593,7 @@ public:
 
     void Delete(char name[], VALUE number)
     {
+        isfirst=false;
         element obj(name, number);
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);

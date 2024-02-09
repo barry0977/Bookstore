@@ -333,60 +333,60 @@ int main()
             }
             else if (token[0] == "modify")
             {
-//              bookinf.modify();
-                bool is[5]{ false };
-                for (int i = 1; i < l; i++)
-                {
-                    if (token[i][1] == 'I')
-                    {
-                        if (is[0])
-                        {
-                            throw Error();
-                        }
-                        is[0] = true;
-                        bookinf.modify(token[i]);
-                    }
-                    else if (token[i][1] == 'n')
-                    {
-                        if (is[1])
-                        {
-                            throw Error();
-                        }
-                        is[1] = true;
-                        bookinf.modify(token[i]);
-                    }
-                    else if (token[i][1] == 'a')
-                    {
-                        if (is[2])
-                        {
-                            throw Error();
-                        }
-                        is[2] = true;
-                        bookinf.modify(token[i]);
-                    }
-                    else if (token[i][1] == 'k')
-                    {
-                        if (is[3])
-                        {
-                            throw Error();
-                        }
-                        is[3] = true;
-                        bookinf.modify(token[i]);
-                    }
-                    else if (token[i][1] == 'p')
-                    {
-                        if (is[4])
-                        {
-                            throw Error();
-                        }
-                        is[4] = true;
-                        bookinf.modify(token[i]);
-                    }
-                    else
-                    {
-                        throw Error();
-                    }
-                }
+              bookinf.modify(token);
+//                bool is[5]{ false };
+//                for (int i = 1; i < l; i++)
+//                {
+//                    if (token[i][1] == 'I')
+//                    {
+//                        if (is[0])
+//                        {
+//                            throw Error();
+//                        }
+//                        is[0] = true;
+//                        bookinf.modify(token[i]);
+//                    }
+//                    else if (token[i][1] == 'n')
+//                    {
+//                        if (is[1])
+//                        {
+//                            throw Error();
+//                        }
+//                        is[1] = true;
+//                        bookinf.modify(token[i]);
+//                    }
+//                    else if (token[i][1] == 'a')
+//                    {
+//                        if (is[2])
+//                        {
+//                            throw Error();
+//                        }
+//                        is[2] = true;
+//                        bookinf.modify(token[i]);
+//                    }
+//                    else if (token[i][1] == 'k')
+//                    {
+//                        if (is[3])
+//                        {
+//                            throw Error();
+//                        }
+//                        is[3] = true;
+//                        bookinf.modify(token[i]);
+//                    }
+//                    else if (token[i][1] == 'p')
+//                    {
+//                        if (is[4])
+//                        {
+//                            throw Error();
+//                        }
+//                        is[4] = true;
+//                        bookinf.modify(token[i]);
+//                    }
+//                    else
+//                    {
+//                        throw Error();
+//                    }
+//                }
             }
             else if (token[0] == "import")
             {
