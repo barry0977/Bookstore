@@ -51,7 +51,6 @@ public:
         userlist.initial("userinfo");
         if (userlist.findval("root").empty())//程序首次运行时自主执行所需的初始化操作；创建帐户名为 root，密码为 sjtu，权限为 {7} 的超级管理员帐户。
         {
-//            std::cout<<"刷新\n";
             User boss;
             strcpy(boss.UserID, "root");
             boss.Privilege = 7;

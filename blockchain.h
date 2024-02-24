@@ -130,23 +130,7 @@ private:
             {
                 return lhs.value < rhs.value;
             }
-        }//原来的比较函数
-
-//        friend bool operator<(const element& lhs, const element& rhs)
-//        {
-//            if (strlen(lhs.index)!=strlen( rhs.index))
-//            {
-//                return strlen(lhs.index)<strlen( rhs.index);
-//            }
-//            else if(strcmp(lhs.index, rhs.index) != 0)
-//            {
-//                return strcmp(lhs.index, rhs.index) < 0;
-//            }
-//            else
-//            {
-//                return lhs.value < rhs.value;
-//            }
-//        }
+        }
 
         friend bool operator>(const element& lhs, const element& rhs)
         {
@@ -658,18 +642,6 @@ public:
                     memoryriver.write_info(tmp);
                     memoryriver.update(btmp, tmp.block1.minindex[place]);
                 }
-
-//                if (btmp.booknum == 0)//如果块里面没有元素，就删块
-//                {
-//                    memoryriver.write_info(tmp);
-//                    DeleteBlock(place);
-//                }
-//                else
-//                {
-//                    memoryriver.update(btmp, tmp.block1.minindex[place]);
-//                    tmp.block1.mininf[place] = btmp.blocklist[0];
-//                    memoryriver.write_info(tmp);
-//                }
             }
         }
     }

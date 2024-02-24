@@ -41,17 +41,6 @@ struct Book
         }
     }
 
-    //    friend bool operator==(const Book& a,const Book& b)
-    //    {
-    //        if(strcmp(a.ISBN,b.ISBN)==0&& strcmp(a.BookName,b.BookName)&&strcmp(a.Author,b.Author)&&strcmp(a.Keyword,b.Keyword)&&a.Price==b.Price&&a.Count==b.Count)
-    //        {
-    //            return true;
-    //        }
-    //        else
-    //        {
-    //            return false;
-    //        }
-    //    }
     friend bool operator==(const Book& a, const Book& b)
     {
         return strcmp(a.ISBN, b.ISBN) == 0;
