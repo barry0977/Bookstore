@@ -9,7 +9,6 @@
 #include "financelog.h"
 #include "log.h"
 #include "stafflog.h"
-#include <limits>
 
 std::vector<User>stack;
 Bookinf bookinf;

@@ -300,7 +300,7 @@ public:
     void Insert(char name[], VALUE number)
     {
         isfirst=false;
-        element obj(name, number);//2.8 看到这里
+        element obj(name, number);
         blockinf<firstblock> tmp;
         memoryriver.get_info(tmp);
         if (tmp.block1.number == 0)//如果原本没有块
